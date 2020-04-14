@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.iriusrisk</groupId>
     <artifactId>iriusrisk-client-lib</artifactId>
@@ -21,7 +22,7 @@
             <plugin>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>2.3.1</version>
+                <version>2.4.13</version>
                 <executions>
                     <execution>
                         <goals>
@@ -29,7 +30,7 @@
                         </goals>
                         <configuration>
                             <!-- specify the swagger yaml -->
-                            <inputSpec>iriusrisk.yaml</inputSpec>
+                            <inputSpec>swagger.yaml</inputSpec>
 
                             <!-- target to generate java client code -->
                             <language>java</language>
@@ -48,7 +49,6 @@
                             </configOptions>
 
                             <!-- override the default library to jersey2 -->
-                            <library>jersey2</library>
                         </configuration>
                     </execution>
                 </executions>
@@ -67,51 +67,52 @@
         <!-- You can find the dependencies for the library configuation you chose by looking in JavaClientCodegen.
              Then find the corresponding dependency on Maven Central, and set the versions in the property section below -->
 
-        <!-- HTTP client: jersey-client -->
+        <!--
+        Swagger Codegen supports the following Client implementations:
+
+        jersey1 + Jackson
+        Jersey2 + Jackson
+        Feign + Jackson
+        *** OkHttp + Gson ***
+        Retrofit2/OkHttp + Gson
+        Spring RestTemplate + Jackson
+        Resteasy + Jackson
+
+        Ref: https://stackoverflow.com/questions/57545884/how-to-develop-a-simple-rest-client-using-swagger-codegen
+        -->
+
         <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>${jersey-version}</version>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>${okhttp-logging-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.gsonfire</groupId>
+            <artifactId>gson-fire</artifactId>
+            <version>${gson-fire-version}</version>
         </dependency>
 
-        <!-- JSON processing: jackson -->
+        <!-- Base64 encoding that works in both JVM and Android -->
         <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-base</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>com.brsanthu</groupId>
+            <artifactId>migbase64</artifactId>
+            <version>${migbase64-version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.jaxrs</groupId>
-            <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${jackson-version}</version>
-        </dependency>
-
-        <!-- Joda time: if you use it -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
@@ -122,21 +123,18 @@
             <artifactId>joda-time</artifactId>
             <version>${jodatime-version}</version>
         </dependency>
-
-        <!-- Base64 encoding that works in both JVM and Android -->
-        <dependency>
-            <groupId>com.brsanthu</groupId>
-            <artifactId>migbase64</artifactId>
-            <version>2.2</version>
-        </dependency>
     </dependencies>
 
     <properties>
         <swagger-annotations-version>1.5.21</swagger-annotations-version>
-        <jersey-version>2.29.1</jersey-version>
+        <gson-version>2.8.6</gson-version>
+        <gson-fire-version>1.8.4</gson-fire-version>
+        <okhttp-version>2.7.5</okhttp-version>
+        <okhttp-logging-version>2.7.5</okhttp-logging-version>
+        <migbase64-version>2.2</migbase64-version>
+        <maven-plugin-version>1.0.0</maven-plugin-version>
         <jackson-version>2.10.1</jackson-version>
         <jodatime-version>2.7</jodatime-version>
-        <maven-plugin-version>1.0.0</maven-plugin-version>
-        <junit-version>4.8.1</junit-version>
+        <junit-version>4.13</junit-version>
     </properties>
 </project>
