@@ -19,6 +19,10 @@ public class IriusRiskClient {
 
         System.out.println("New IriusRisk instance");
         ProductsApi apiInstance = new ProductsApi();
+        // You must define the scheme://host:port/api/v1 from your IriusRisk instance
+        // i.e.: https://server.com:5445/api/v1
+        // http://server2.com/api/v1
+        apiInstance.getApiClient().setBasePath("<scheme://host:port>/api/v1");
         String apiToken = "<api-token>";
 
         try {
