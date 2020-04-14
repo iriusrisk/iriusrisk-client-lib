@@ -1,7 +1,6 @@
 # iriusrisk-client-lib
 IriusRisk client Java library
 
-To generate:
+To generate a jar file:
 
-	curl https://api.swaggerhub.com/apis/continuumsecurity/IriusRisk/1 > swagger.yaml
 	mvn package
