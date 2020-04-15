@@ -6,11 +6,10 @@
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>iriusrisk-client-lib</name>
-    <url>http://maven.apache.org</url>
+
     <build>
         <defaultGoal>package</defaultGoal>
         <plugins>
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -18,7 +17,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <!-- activate the plugin -->
             <plugin>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
@@ -29,16 +27,8 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!-- specify the swagger yaml -->
                             <inputSpec>swagger.yaml</inputSpec>
-
-                            <!-- target to generate java client code -->
                             <language>java</language>
-
-                            <!-- hint: if you want to generate java server code, e.g. based on Spring Boot,
-                                 you can use the following target: <language>spring</language> -->
-
-                            <!-- pass any necessary config options -->
                             <configOptions>
                                 <dateLibrary>joda</dateLibrary>
                                 <apiPackage>com.iriusrisk.api</apiPackage>
@@ -47,17 +37,32 @@
                                 <groupId>com.iriusrisk</groupId>
                                 <artifactId>iriusrisk-client-lib</artifactId>
                             </configOptions>
-
-                            <!-- override the default library to jersey2 -->
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
     <dependencies>
-        <!-- dependencies are needed for the client being generated -->
-
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
