@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2012-2020 Continuum Security.  All rights reserved
  */
-package com.iriusrisk.client;
 
 import com.iriusrisk.ApiException;
 import com.iriusrisk.api.ProductsApi;
