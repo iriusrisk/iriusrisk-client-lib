@@ -2,6 +2,8 @@
  * Copyright (c) 2012-2020 Continuum Security.  All rights reserved
  */
 
+import com.squareup.okhttp.OkHttpClient;
+
 import com.iriusrisk.ApiException;
 import com.iriusrisk.api.ProductsApi;
 import com.iriusrisk.model.CreateProduct;
@@ -9,6 +11,8 @@ import com.iriusrisk.model.ProductShort;
 
 import java.io.File;
 import java.util.List;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 /**
  * This is an example of how to use IriusRisk Client Lib to perform some actions
@@ -21,7 +25,18 @@ public class IriusRiskClient {
         // You must define the scheme://host:port/api/v1 from your IriusRisk instance
         // i.e.: https://server.com:5445/api/v1
         // http://server2.com/api/v1
+        
+        OkHttpClient httpClient = new OkHttpClient();
+        String proxyHost = System.getProperty("proxy.host");
+        if (proxyHost != null) {
+            int proxyPort = Integer.parseInt(System.getProperty("proxy.port"));
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+            httpClient.setProxy(proxy);
+        }
+        
         apiInstance.getApiClient().setBasePath("<scheme://host:port>/api/v1");
+        apiInstance.getApiClient().setHttpClient(httpClient);
+        apiInstance.getApiClient().setVerifyingSsl(false);
         String apiToken = "<api-token>";
 
         try {
