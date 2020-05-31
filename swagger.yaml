@@ -3308,6 +3308,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Reference'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
   Threat:
     type: object
     properties:
