@@ -1,1 +1,3716 @@
-{"swagger":"2.0","info":{"title":"IriusRisk API","description":"Products API","version":"1"},"host":"demo.iriusrisk.com","schemes":["https"],"basePath":"/api/v1","produces":["application/json"],"paths":{"/roles":{"post":{"summary":"Creates a new Role","description":"Creates a new role.\nConditions to be able to perform the action:\n - To have the permission **ROLES_UPDATE** granted.\n","tags":["Roles"],"consumes":["application/json"],"x-permissions":["ROLES_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"createRoleRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"name":{"description":"Name of the new role","type":"string"},"permissions":{"description":"Role's permissions list","type":"array","items":{"type":"string"}}}}}],"responses":{"201":{"description":"Created Role"},"401":{"description":"Authentication information is missing or invalid or not granted to perform this action.","schema":{"$ref":"#/definitions/Error"}},"400":{"description":"Bad request","schema":{"type":"array","items":{"$ref":"#/definitions/Error"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Permission not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/roles/{role_name}":{"delete":{"summary":"Deletes an existing role","description":"Deletes an existing role.\nConditions to be able to perform the action:\n- To have the permission **ROLES_UPDATE** granted.\n","tags":["Roles"],"x-permissions":["ROLES_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"role_name","in":"path","description":"Role name to delete","required":true,"type":"string","format":"string"}],"responses":{"204":{"description":"Role has been deleted"},"400":{"description":"Bad request","schema":{"type":"array","items":{"$ref":"#/definitions/Error"}}},"401":{"description":"Authentication information is missing or invalid or not granted to perform this action.","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Role not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/groups":{"post":{"summary":"Creates a new user group","description":"Creates a new user group.\nConditions to be able to perform the action:\n   - To have the permission **ALL_USERS_UPDATE** granted.\n","tags":["Groups"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"createGroupRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"}}}}],"responses":{"201":{"description":"Group details","schema":{"$ref":"#/definitions/Group"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"get":{"summary":"Gets a list of all Groups","description":"Gets a list of all user's groups.\nConditions to be able to perform the action:\n   - To have the permission **ALL_USERS_UPDATE** granted.\n","tags":["Groups"],"x-permissions":["ALL_USERS_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"}],"responses":{"200":{"description":"An array of groups","schema":{"type":"array","items":{"$ref":"#/definitions/Group"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/groups/{groupRef}":{"put":{"summary":"Update a users group","description":"Updates a users group.\nConditions to be able to perform the action:\n   - To have the permission **ALL_USERS_UPDATE** granted.\n","tags":["Groups"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"groupRef","in":"path","description":"unique ref of the group","required":true,"type":"string","format":"string"},{"name":"updateGroupRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"}}}}],"responses":{"204":{"description":"Group has been updated","schema":{"$ref":"#/definitions/Group"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Group not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Deletes a users group","description":"Deletes a users group.\nConditions to be able to perform the action:\n   - To have the permission **ALL_USERS_UPDATE** granted.\n","tags":["Groups"],"x-permissions":["ALL_USERS_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"groupRef","in":"path","description":"unique name of the group","required":true,"type":"string","format":"string"}],"responses":{"204":{"description":"Group has been deleted"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Group not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"get":{"summary":"Gets the group details.","description":"Returns the group details for the requested group.\nConditions to be able to perform the action:\n   - If the caller has the PRODUCTS_LIST_ALL permission then all groups can be queried without restriction.\n   - Without the PRODUCTS_LIST_ALL permission, the call will only return the group if the caller belongs to that group.\n","tags":["Groups"],"x-permissions":["PRODUCTS_LIST_ALL"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"groupRef","in":"path","description":"unique name of the group","required":true,"type":"string","format":"string"}],"responses":{"200":{"description":"Group details","schema":{"type":"array","items":{"$ref":"#/definitions/Group"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/groups/{group}/users":{"get":{"summary":"List users from a group","description":"List users who belongs to a group.\nConditions to be able to perform the action:\n - To have the permission **ALL_USERS_UPDATE** granted, or\n - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to list users of a group, **if you belong to this group**.\n","tags":["Groups","Users"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE","MANAGE_USERS_BU"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"group","in":"path","description":"name of the group","required":true,"type":"string","format":"string"}],"responses":{"200":{"description":"An array of users who belongs to the group","schema":{"type":"array","items":{"$ref":"#/definitions/User"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"put":{"summary":"Assigns users to a group","description":"Assigns users to a group.\nConditions to be able to perform the action:\n - To have the permission **ALL_USERS_UPDATE** granted, or\n - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to assign users to a group, **if you belong to this group**.\n","tags":["Groups","Users"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE","MANAGE_USERS_BU"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"group","in":"path","description":"name of the group","required":true,"type":"string","format":"string"},{"name":"assignUserGroupRequestBody","description":"JSON object that contains information to assign users to group","in":"body","required":true,"schema":{"type":"object","properties":{"usernames":{"description":"List of users to assign to group","type":"array","items":{"type":"string"}}}}}],"responses":{"201":{"description":"An array of users that have been assigned to group","schema":{"type":"object","properties":{"group":{"type":"string"},"usernames":{"type":"array","items":{"type":"string"}}}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Unassign a list of users from a group","description":"Unassign a list of users from a group.\nConditions to be able to perform the action:\n - To have the permission **ALL_USERS_UPDATE** granted, or\n - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign users from a group, **if you belong to this group**.\n","tags":["Groups","Users"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE","MANAGE_USERS_BU"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"group","in":"path","description":"name of the group","required":true,"type":"string","format":"string"},{"name":"unassingUsersGroupRequestBody","description":"JSON object that contains information to unassign users from group","in":"body","required":true,"schema":{"type":"object","properties":{"usernames":{"description":"List of usernames of users to be unassigned from a group","type":"array","items":{"type":"string"}}}}}],"responses":{"204":{"description":"All users have been unassigned"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/groups/{group}/users/{user}":{"delete":{"summary":"Removes a user from a group","description":"Unassign a user from a group.\nConditions to be able to perform the action:\n - To have the permission **ALL_USERS_UPDATE** granted, or\n - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign user from a group, **if you belong to this group**.\n","tags":["Groups","Users"],"x-permissions":["ALL_USERS_UPDATE","MANAGE_USERS_BU"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"group","in":"path","description":"name of the group","required":true,"type":"string","format":"string"},{"name":"user","in":"path","description":"user to be removed from group","required":true,"type":"string","format":"string"}],"responses":{"204":{"description":"User has been removed from group"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries":{"post":{"summary":"Creates a Library","description":"Creates a new empty Library.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"createLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"}}}}],"responses":{"201":{"description":"Empty Library created","schema":{"$ref":"#/definitions/Library"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}":{"get":{"summary":"Gets library details","description":"Gets the library details.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"}],"responses":{"200":{"description":"Library details","schema":{"$ref":"#/definitions/Library"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Deletes a Library","description":"Deletes a library.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"}],"responses":{"204":{"description":"The library has been deleted"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns":{"post":{"summary":"Creates new Risk Pattern","description":"Creates new Risk Pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"createRiskPatternRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"}}}}],"responses":{"201":{"description":"Risk Pattern details","schema":{"$ref":"#/definitions/RiskPattern"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}":{"get":{"summary":"Gets Risk Pattern details","description":"Gets Risk Pattern details.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"}],"responses":{"200":{"description":"RiskPattern details","schema":{"$ref":"#/definitions/RiskPattern"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Deletes a Risk Pattern","description":"Deletes a Risk Pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"}],"responses":{"204":{"description":"The risk pattern has been deleted"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases":{"post":{"summary":"Creates new use case in a library.","description":"Creates new use case in a library.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Use Cases"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"createUseCaseLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"}}}}],"responses":{"201":{"description":"UseCase details","schema":{"$ref":"#/definitions/LibraryUseCase"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats":{"post":{"summary":"Creates a new threat in a library.","description":"Creates a new threat in a library.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Threats"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"useCaseRef","in":"path","description":"Reference for Use Case","required":true,"type":"string"},{"name":"createThreatLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"},"riskRating":{"description":"Risk Rating","type":"object","properties":{"confidentiality":{"description":"Confidentiality","type":"string","enum":["none","low","medium","high","very-high"]},"integrity":{"description":"Integrity","type":"string","enum":["none","low","medium","high","very-high"]},"availability":{"description":"Availability","type":"string","enum":["none","low","medium","high","very-high"]},"easeOfExploitation":{"description":"Ease Of Exploitation","type":"string","enum":["none","low","medium","high","very-high"]}}}}}}],"responses":{"201":{"description":"Threat details","schema":{"$ref":"#/definitions/LibraryThreat"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/weaknesses":{"post":{"summary":"Creates a new weakness in a risk pattern","description":"Creates a new Weakness in a risk pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns","Weaknesses"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"createWeaknessLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"},"impact":{"description":"Impact","type":"string","enum":["none","low","medium","high","very-high"]},"test":{"$ref":"#/definitions/TestCommand"}}}}],"responses":{"201":{"description":"Weakness details","schema":{"$ref":"#/definitions/LibraryWeakness"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/countermeasures":{"post":{"summary":"Creates new countermeasure in a risk pattern","description":"Creates new countermeasure in a risk pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns","Countermeasures"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"createCountermeasureLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"$ref":"#/definitions/ControlCommand"}}],"responses":{"201":{"description":"Countermeasure details","schema":{"$ref":"#/definitions/LibraryControl"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses":{"put":{"summary":"Associates weakness to a threat in a risk pattern.","description":"Associates weakness to a threat in a risk pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns","Use Cases","Threats","Weaknesses"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"useCaseRef","in":"path","description":"Reference for Use Case","required":true,"type":"string"},{"name":"threatRef","in":"path","description":"Reference for Threat","required":true,"type":"string"},{"name":"associateWeaknessThreatLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Existing Weakness reference","type":"string"}}}}],"responses":{"201":{"description":"Weakness details","schema":{"$ref":"#/definitions/LibraryWeakness"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses/{weaknessRef}/countermeasures":{"put":{"summary":"Associates a countermeasure to a weakness in a risk pattern.","description":"Associates a countermeasure to a weakness in a risk pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Risk Patterns","Use Cases","Threats","Weaknesses","Countermeasures"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"useCaseRef","in":"path","description":"Reference for Use Case","required":true,"type":"string"},{"name":"threatRef","in":"path","description":"Reference for Threat","required":true,"type":"string"},{"name":"weaknessRef","in":"path","description":"Reference for Weakness","required":true,"type":"string"},{"name":"associateCountermeasureWeaknessLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Existing Countermesasure reference","type":"string"}}}}],"responses":{"201":{"description":"Countermeasure details","schema":{"$ref":"#/definitions/LibraryControl"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/countermeasures":{"put":{"summary":"Associates a countermeasure to a threat in a risk pattern.","description":"Associates a countermeasure to a threat in a risk pattern.\nConditions to be able to perform the action:\n  - To have the permission **LIBRARY_UPDATE** granted.\n","tags":["Libraries","Use Cases","Threats","Countermeasures"],"consumes":["application/json"],"x-permissions":["LIBRARY_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"libraryRef","in":"path","description":"Reference for library","required":true,"type":"string"},{"name":"riskPatternRef","in":"path","description":"Reference for Risk Pattern","required":true,"type":"string"},{"name":"useCaseRef","in":"path","description":"Reference for Use Case","required":true,"type":"string"},{"name":"threatRef","in":"path","description":"Reference for Threat","required":true,"type":"string"},{"name":"associateCountermeasureThreatLibraryRequestBody","in":"body","description":"JSON data that contains information of the fields","required":true,"schema":{"type":"object","properties":{"ref":{"description":"Existing Countermeasure reference","type":"string"},"mitigation":{"description":"Mitigation","type":"integer"}}}}],"responses":{"201":{"description":"Countermeasure details","schema":{"$ref":"#/definitions/LibraryControl"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products":{"get":{"summary":"Gets a list of all products.","description":"Gets a list of all products visible by the user who perform the call.\nConditions to be able to perform the action:\n  - No permissions are required to perform this action.\n","tags":["Products"],"x-permissions":[],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"}],"responses":{"200":{"description":"An array of products","schema":{"type":"array","items":{"$ref":"#/definitions/ProductShort"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"post":{"summary":"Creates a new product","description":"Createa a new product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_CREATE** granted.\n","tags":["Products"],"consumes":["application/json"],"x-permissions":["PRODUCT_CREATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"createProductRequestBody","in":"body","description":"JSON data that contains information to create new product","required":true,"schema":{"$ref":"#/definitions/CreateProduct"}}],"responses":{"201":{"description":"Gets product details","schema":{"$ref":"#/definitions/ProductShort"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}":{"put":{"summary":"Updates a product","description":"Updates the details of a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_UPDATE** granted.\n","tags":["Products"],"consumes":["application/json"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"},{"name":"updateProductRequestBody","in":"body","description":"JSON data that contains product details to update","required":true,"schema":{"$ref":"#/definitions/UpdateProduct"}}],"responses":{"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Product not found"},"200":{"description":"Product updated"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"get":{"summary":"Gets product details","description":"Gets the details of a product.\nConditions to be able to perform the action:\n  - No permissions are required to perform this action.\n","tags":["Products"],"x-permissions":[],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"Product details","schema":{"$ref":"#/definitions/Product"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Deletes a product","description":"Deletes a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_DELETE** granted.\n","tags":["Products"],"x-permissions":["PRODUCT_DELETE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"204":{"description":"The product has been deleted"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/upload":{"post":{"summary":"Creates a new product, library or template from a XML file upload.","description":"Creates a new product, library or template from a XML file upload.\nConditions to be able to perform the action:\n- To have the permission **PRODUCT_CREATE** granted allows to create a product.\n- To have the permission **LIBRARY_UPDATE** granted allows to create a library.\n- To have the permission **TEMPLATE_UPDATE** granted allows to create a template.\n","tags":["Products","Libraries","Templates"],"consumes":["multipart/form-data"],"x-permissions":["PRODUCT_CREATE","LIBRARY_UPDATE","TEMPLATE_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"formData","description":"Product ref","required":true,"type":"string","format":"string"},{"name":"name","in":"formData","description":"Product name","required":true,"type":"string","format":"string"},{"name":"type","in":"formData","description":"Product type - STANDARD (By default), TEMPLATE or LIBRARY","required":false,"type":"string","format":"string"},{"name":"fileName","in":"formData","description":"File to upload in XML format","required":true,"type":"file"}],"responses":{"201":{"description":"Product details","schema":{"$ref":"#/definitions/ProductShort"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/upload/{ref}":{"post":{"summary":"Updates an existing product from a XML file upload.","description":"Updates a product from a XML file upload.\nConditions to be able to perform the action:\n- To have the permission **PRODUCT_UPDATE** granted allows to update a product.\n","tags":["Products"],"consumes":["multipart/form-data"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string","format":"string"},{"name":"fileName","in":"formData","description":"File to upload in XML format","required":true,"type":"file"},{"name":"deleteCountermeasures","in":"formData","description":"This flag indicates if the rules execution will delete the threat and countermeasures which don't apply to the new product threat model. If true, the threats and countermeasures will be automatically removed from the model. If false, the threats and countermeasures won't be removed from the model.","required":false,"type":"string","format":"string"}],"responses":{"200":{"description":"Product details","schema":{"$ref":"#/definitions/ProductShort"}},"400":{"description":"error in the call","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Product not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/groups":{"get":{"summary":"List all groups assigned to a product","description":"List all groups assigned to a product.\n    Conditions to be able to perform the action:\n        - If the caller has the PRODUCTS_LIST_ALL permission then all products can be queried without restriction.\n        - Without the PRODUCTS_LIST_ALL permission, the call will only return the groups if the caller belongs to that product.\n","tags":["Products","Groups"],"x-permissions":["PRODUCTS_LIST_ALL"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference to product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of groups assigned to the product","schema":{"type":"array","items":{"type":"string"}}},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Product not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"put":{"summary":"Assigns groups of users to a product.","description":"Assigns groups of users to a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_UPDATE** granted.\n","tags":["Products","Groups"],"consumes":["application/json"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference for product","required":true,"type":"string"},{"name":"assignGroupsProductRequestBody","description":"JSON object that contains information to assign groups to product","in":"body","required":true,"schema":{"type":"object","properties":{"groups":{"description":"List of groups to assign to product","type":"array","items":{"type":"string"}}}}}],"responses":{"201":{"description":"Product details including groups assigned","schema":{"$ref":"#/definitions/ProductShortGroups"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Unassigns a list of user groups from a product.","description":"Unassigns a list of user groups from a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_UPDATE** granted.\n","tags":["Products","Groups"],"consumes":["application/json"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference for product","required":true,"type":"string"},{"name":"unassignGroupsProductRequestBody","description":"JSON object that contains information to unassign groups from a product","in":"body","required":true,"schema":{"type":"object","properties":{"groups":{"description":"List of groups to unassign from product","type":"array","items":{"type":"string"}}}}}],"responses":{"200":{"description":"An object with an array of user groups that have been unassigned and an array of user groups that have not been found in the project","schema":{"type":"object","properties":{"unassigned":{"type":"array","items":{"type":"string"}},"notFound":{"type":"array","items":{"type":"string"}}}}},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Product not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/users":{"get":{"summary":"List all users assigned to a product","description":"List all users assigned to a product.\n    Conditions to be able to perform the action:\n        - No permissions are required to perform this action.\n","tags":["Products","Users"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference to product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of users assigned to the product","schema":{"type":"array","items":{"type":"string"}}},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Product not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"delete":{"summary":"Unassigns a list of users from a product.","description":"Unassign a list of users from a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_UPDATE** granted.\n","tags":["Products","Users"],"consumes":["application/json"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference for product","required":true,"type":"string"},{"name":"unassignUsersProductRequestBody","in":"body","description":"JSON object that contains information to unassign users from product","required":true,"schema":{"type":"object","properties":{"users":{"description":"List of users to unassign from a product","type":"array","items":{"type":"string"}}}}}],"responses":{"204":{"description":"All users have been unassigned"},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"Product not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"put":{"summary":"Assigns users to a product.","description":"Assigns users to a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_UPDATE** granted.\n","tags":["Products","Users"],"consumes":["application/json"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference for product","required":true,"type":"string"},{"name":"assignUsersProductRequestBody","in":"body","description":"JSON data that contains the information to assign users to product","required":true,"schema":{"type":"object","properties":{"users":{"description":"List of users to assign to product","type":"array","items":{"type":"string"}}}}}],"responses":{"201":{"description":"Product details including users assigned","schema":{"$ref":"#/definitions/ProductShortUsers"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/users/{user}":{"delete":{"summary":"Unassigns a user from a product","description":"Unassigns a user from a product.\nConditions to be able to perform the action:\n  - To have the permission **PRODUCT_UPDATE** granted.\n","tags":["Products","Users"],"consumes":["application/json"],"x-permissions":["PRODUCT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"Reference for product","required":true,"type":"string"},{"name":"user","in":"path","description":"Username of the user who will be unassigned from the product","required":true,"type":"string"}],"responses":{"204":{"description":"User has been unassigned from the product"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/risks":{"get":{"summary":"Gets the risks summary of a product","description":"This endpoint returns a summary of the risks of a product.\nConditions to be able to perform the action:\n  - No permissions are required to perform this action.\n","tags":["Products","Risks"],"x-permissions":[],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"Product risks","schema":{"$ref":"#/definitions/RiskSummary"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/controls":{"get":{"summary":"Gets a list of all product countermeasures","description":"Returns a list of all the countermeasures of a product.\nConditions to be able to perform the action:\n  - To have the permission **COUNTERMEASURE_VIEW** granted, or\n  - To have the permission **COUNTERMEASURE_UPDATE** granted.\n","tags":["Products","Controls"],"x-permissions":["COUNTERMEASURE_VIEW","COUNTERMEASURE_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of product countermeasures","schema":{"type":"array","items":{"$ref":"#/definitions/ComponentControl"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/controls/implemented":{"get":{"summary":"Gets a list of all implemented countermeasures of a product.","description":"Returns a list of all the implemented countermeasures of a product.\nConditions to be able to perform the action:\n  - To have the permission **COUNTERMEASURE_VIEW** granted, or\n  - To have the permission **COUNTERMEASURE_UPDATE** granted.\n","tags":["Products","Controls"],"x-permissions":["COUNTERMEASURE_VIEW","COUNTERMEASURE_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of product countermeasures","schema":{"type":"array","items":{"$ref":"#/definitions/ComponentControl"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/controls/required":{"get":{"summary":"Gets a list of all required countermeasures of a product","description":"Returns a list of all the required countermeasures of a product.\nConditions to be able to perform the action:\n  - To have the permission **COUNTERMEASURE_VIEW** granted, or\n  - To have the permission **COUNTERMEASURE_UPDATE** granted.\n","tags":["Products","Controls"],"consumes":["application/json"],"x-permissions":["COUNTERMEASURE_VIEW","COUNTERMEASURE_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of product countermeasures","schema":{"type":"array","items":{"$ref":"#/definitions/ComponentControl"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/components/{componentRef}/controls/{controlRef}/status":{"put":{"summary":"Sets the desired status to a countermeasure","description":"Sets the desired status to a countermeasure.\nPossible values are:\n            - implemented\n            - recommended\n            - rejected\n            - required\nConditions to be able to perform the action:\n  - To have the permission **COUNTERMEASURE_UPDATE** granted to set any state.\n  - To have the permission **COUNTERMEASURE_SELECT_IMPLEMENTED** granted to set implemented state.\n  - To have the permission **COUNTERMEASURE_SELECT_RECOMMENDED** granted to set recommended state.\n  - To have the permission **COUNTERMEASURE_SELECT_REJECTED** granted to set reject state.\n  - To have the permission **COUNTERMEASURE_SELECT_REQUIRED** granted to set required state.\n","tags":["Products","Controls"],"consumes":["application/json"],"x-permissions":["COUNTERMEASURE_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"},{"name":"componentRef","in":"path","description":"ID for component","required":true,"type":"string"},{"name":"controlRef","in":"path","description":"Control ref","required":true,"type":"string","format":"string"},{"name":"updateStatusCountermeasureRequestBody","in":"body","description":"JSON data that contains the information to update countermeasure","required":true,"schema":{"type":"object","properties":{"statusName":{"type":"string","description":"New state of the countermeasure ( rejected | recommended | required | implemented )","enum":["rejected","recommended","required","implemented"]},"rejectedReason":{"type":"string","description":"Reason for rejecting the countermeasure"}}}}],"responses":{"200":{"description":"An empty array"},"404":{"description":"Product, component or control not found"},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/threats":{"get":{"summary":"Gets a list of all threats of a product","description":"Returns a list of all the threats of a product.\nConditions to be able to perform the action:\n  - To have the permission **THREAT_VIEW** granted, or\n  - To have the permission **THREAT_UPDATE** granted.\n","tags":["Products","Threats"],"x-permissions":["THREAT_VIEW","THREAT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of product threats","schema":{"type":"array","items":{"$ref":"#/definitions/ComponentUseCaseThreatShort"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/weaknesses":{"get":{"summary":"Gets a list of all weaknesses of a product","description":"Returns a list of all the weaknesses of a product.\nConditions to be able to perform the action:\n  - To have the permission **THREAT_VIEW** granted, or\n  - To have the permission **THREAT_UPDATE** granted.\n","tags":["Products","Weaknesses"],"x-permissions":["THREAT_VIEW","THREAT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"}],"responses":{"200":{"description":"An array of product weaknesses","schema":{"type":"array","items":{"$ref":"#/definitions/ComponentWeakness"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/weaknesses/{test_state}":{"get":{"summary":"Gets a list of all weaknesses of a product filtered by test state","description":"Returns a list of all the weaknesses of a product.\nWith the optional parameter `test_state` can filter the weakness by test state.\nConditions to be able to perform the action:\n  - To have the permission **THREAT_VIEW** granted, or\n  - To have the permission **THREAT_UPDATE** granted.\n","tags":["Products","Weaknesses"],"x-permissions":["THREAT_VIEW","THREAT_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"},{"name":"test_state","in":"path","description":"Code for a test state","required":true,"type":"string","enum":["failed","error","not-tested","passed","not-applicable","partially-tested"]}],"responses":{"200":{"description":"An array of product weaknesses","schema":{"type":"array","items":{"$ref":"#/definitions/ComponentWeakness"}}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/components/{componentRef}/tests/{cwe}":{"put":{"summary":"Updates a single test to a component.","description":"Updates a single test to a component.\nConditions to be able to perform the action:\n  - To have the permission **TEST_UPDATE** granted.\n","tags":["Products","Components","Tests"],"consumes":["application/json"],"x-permissions":["TEST_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"},{"name":"componentRef","in":"path","description":"ID for component","required":true,"type":"string"},{"name":"cwe","in":"path","description":"countermeasure or weakness CWE","required":true,"type":"string"},{"name":"updateStatusTestRequestBody","in":"body","description":"JSON data that contains the information to update test","required":true,"schema":{"type":"object","properties":{"state":{"type":"string","description":"New state of the test ( not-tested | passed | failed | error )","enum":["not-tested","passed","failed","error"]},"output":{"type":"string","description":"new output of the test"}}}}],"responses":{"200":{"description":"Tests updated","schema":{"type":"array","items":{"type":"object","properties":{"id":{"type":"number"},"source":{"type":"object","properties":{"result":{"type":"string"},"output":{"type":"string"}}},"control":{"type":"object","properties":{"name":{"type":"string"},"component":{"type":"string"},"project":{"type":"string"}}},"weakness":{"type":"object","properties":{"name":{"type":"string"},"component":{"type":"string"},"project":{"type":"string"}}}}}}},"400":{"description":"error in the call"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/tests/{testType}/upload":{"post":{"summary":"Imports test results from different sources to a product.","description":"Imports test results from different sources (OWASP ZAP, Cucumber, Micro Focus Fortify) uploading files. More than one file can be attached to the call.\nConditions to be able to perform the action:\n  - To have the permission **TEST_UPDATE** granted.\n","tags":["Products","Tests"],"consumes":["multipart/form-data"],"x-permissions":["TEST_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"},{"name":"testType","in":"path","description":"Type of test to be imported (zap|cucumber|junit|hp-fortify)","required":true,"type":"string","enum":["zap","cucumber","junit","hp-fortify"]},{"name":"fileName","in":"formData","description":"File to upload","type":"file"}],"responses":{"201":{"description":"Tests updated. Returns the number of changed tests","schema":{"type":"object","properties":{"changedTest":{"type":"number"}}}},"400":{"description":"Error in the call. Misspelled or undefined test Type"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}}}}},"/products/{ref}/components/{componentRef}/tests/{testType}/upload":{"post":{"summary":"Imports test results from different sources to a component","description":"Imports test results from different sources (OWASP ZAP, Cucumber, Micro Focus Fortify) into the specified component. More than one file can be attached to the call.\nConditions to be able to perform the action:\n  - To have the permission **TEST_UPDATE** granted.\n","tags":["Products","Components","Tests"],"consumes":["multipart/form-data"],"x-permissions":["TEST_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for product","required":true,"type":"string"},{"name":"componentRef","in":"path","description":"ID for component","required":true,"type":"string"},{"name":"testType","in":"path","description":"Type of test to be imported (zap|cucumber|junit|hp-fortify)","required":true,"type":"string","enum":["zap","cucumber","junit","hp-fortify"]},{"name":"fileName","in":"formData","description":"File to upload","type":"file"}],"responses":{"201":{"description":"Tests updated. Returns the number of changed tests","schema":{"type":"object","properties":{"changedTest":{"type":"number"}}}},"400":{"description":"Error in the call. Misspelled or undefined test Type"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}}}}},"/users":{"get":{"summary":"List of all Users.","description":"Returns a list of all the users of the system.\nConditions to be able to perform the action:\n  - To have the permission **ALL_USERS_UPDATE** granted.\n","tags":["Users"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"}],"responses":{"200":{"description":"An array of users","schema":{"type":"array","items":{"$ref":"#/definitions/User"}}},"400":{"description":"Bad request","schema":{"type":"array","items":{"$ref":"#/definitions/Error"}}},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}},"post":{"summary":"Creates a new user","description":"Creates a new user.\nConditions to be able to perform the action:\n  - To have the permission **ALL_USERS_UPDATE** granted.\n","tags":["Users"],"consumes":["application/json"],"x-permissions":["ALL_USERS_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"createUserRequestBody","in":"body","description":"JSON data that contains information to creates new user","required":true,"schema":{"type":"object","required":["username","auth","email","firstName","lastName","roleGroups"],"properties":{"username":{"description":"Username of the user","type":"string"},"auth":{"description":"Authentication type","type":"string","enum":["ldap","saml"]},"email":{"description":"Email of the user","type":"string"},"firstName":{"description":"First name of the user","type":"string"},"lastName":{"description":"Last name of the user","type":"string"},"roleGroups":{"description":"List of roles' refs to assign to the user. Can be an empty list.","type":"array","items":{"type":"string"}}}}}],"responses":{"201":{"description":"User has been created"},"400":{"description":"Bad request"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/users/{username}":{"delete":{"summary":"Deletes a user","description":"Deletes a user.\nConditions to be able to perform the action:\n  - To have the permission **ALL_USERS_UPDATE** granted, or\n  - To have the permission **MANAGE_USERS_BU** granted. Having this permission you can delete users who belongs to some of your user groups.\n","tags":["Users"],"x-permissions":["ALL_USERS_UPDATE","MANAGE_USERS_BU"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"username","in":"path","description":"User's username","required":true,"type":"string"}],"responses":{"204":{"description":"User has been deleted"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"User not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/users/{username}/token":{"post":{"summary":"Generates a user API token","description":"Generates a new user API token. If the user already has a generated API token, generates a new one.\nConditions to be able to perform the action:\n  - To have the permission **ALL_USERS_UPDATE** granted, or\n  - To have the permission **MANAGE_USERS_BU** granted. Having this permission you can generate a user API token to users who belongs to some of your user groups.\n","tags":["Users","Token"],"x-permissions":["ALL_USERS_UPDATE","MANAGE_USERS_BU"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"username","in":"path","description":"User's username","required":true,"type":"string"}],"responses":{"201":{"description":"The user API token","schema":{"type":"string"}},"401":{"description":"Authentication information is missing or invalid","schema":{"$ref":"#/definitions/Error"}},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"404":{"description":"User not found"},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}},"/rules/product/{ref}":{"put":{"summary":"Executes rules by a product","description":"Execute the rules engine for a product and for all components within the product.  If the deleteCountermeasures parameter is true, then threats and countermeasure that no longer apply to the model will automatically\nbe removed.  If it is false, then those threats and countermeasures will remain in the model.\n  - To have the permission **ARCHITECTURE_UPDATE** granted.\n","tags":["Rules","Products"],"consumes":["application/json"],"x-permissions":["ARCHITECTURE_UPDATE"],"parameters":[{"name":"api-token","in":"header","description":"Authentication token","required":true,"type":"string","format":"string"},{"name":"ref","in":"path","description":"ID for Product","required":true,"type":"string"},{"name":"deleteCountermeasures","in":"header","description":"This flag indicates if the rules execution will delete the threat and countermeasures which don't apply to the new product threat model. If true, the threats and countermeasures will be automatically removed from the model. If false, the threats and countermeasures won't be removed from the model.","required":false,"type":"string","format":"string"}],"responses":{"200":{"description":"Rules executed properly"},"403":{"description":"API is not enabled","schema":{"$ref":"#/definitions/Error"}},"default":{"description":"Unexpected error","schema":{"$ref":"#/definitions/Error"}}}}}},"definitions":{"ProductShort":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"revision":{"type":"integer","format":"int32","default":1},"type":{"type":"string"},"status":{"type":"string"},"priority":{"type":"integer","format":"int32","default":0},"tags":{"type":"string"},"workflowState":{"type":"string"},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"CreateProduct":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"tags":{"type":"string"},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"UpdateProduct":{"type":"object","properties":{"name":{"type":"string"},"desc":{"type":"string"},"tags":{"type":"string"},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"LibraryThreat":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"mitigation":{"type":"integer"},"risk":{"type":"integer"},"inherentRisk":{"type":"integer"},"projectedRisk":{"type":"integer"},"riskRating":{"$ref":"#/definitions/RiskRating"},"references":{"type":"array","items":{"$ref":"#/definitions/Reference"}},"weaknesses":{"type":"array","items":{"$ref":"#/definitions/ThreatWeakness"}},"controls":{"type":"array","items":{"$ref":"#/definitions/ThreatControl"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"RiskPattern":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"weaknesses":{"type":"array","items":{"$ref":"#/definitions/LibraryWeakness"}},"countermeasures":{"type":"array","items":{"$ref":"#/definitions/LibraryControl"}},"usecases":{"type":"array","items":{"$ref":"#/definitions/LibraryUseCase"}}}},"LibraryUseCase":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"threats":{"type":"array","items":{"$ref":"#/definitions/LibraryThreat"}}}},"Library":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"riskPatterns":{"type":"array","items":{"$ref":"#/definitions/RiskPattern"}}}},"LibraryWeakness":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"state":{"type":"string"},"impact":{"type":"string"},"test":{"$ref":"#/definitions/Test"},"controls":{"type":"array","items":{"$ref":"#/definitions/ThreatControl"}}}},"LibraryControl":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"platform":{"type":"string"},"cost":{"type":"integer"},"risk":{"type":"integer"},"state":{"type":"string"},"mitigation":{"type":"integer"},"implementations":{"type":"array","items":{"$ref":"#/definitions/Implementation"}},"references":{"type":"array","items":{"$ref":"#/definitions/Reference"}},"standards":{"type":"array","items":{"$ref":"#/definitions/Standard"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}},"test":{"$ref":"#/definitions/Test"}}},"ProductShortGroups":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"revision":{"type":"integer","format":"int32","default":1},"type":{"type":"string"},"status":{"type":"string"},"priority":{"type":"integer","format":"int32","default":0},"tags":{"type":"string"},"workflowState":{"type":"string"},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}},"groups":{"type":"array","items":{"type":"string"}}}},"ProductShortUsers":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"revision":{"type":"integer","format":"int32","default":1},"type":{"type":"string"},"status":{"type":"string"},"priority":{"type":"integer","format":"int32","default":0},"tags":{"type":"string"},"workflowState":{"type":"string"},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}},"users":{"type":"array","items":{"type":"string"}}}},"Product":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"revision":{"type":"integer","default":1},"type":{"type":"string"},"status":{"type":"string"},"priority":{"type":"integer","default":0},"tags":{"type":"string"},"desc":{"type":"string"},"workflowState":{"type":"string"},"questions":{"type":"array","items":{"$ref":"#/definitions/Question"}},"diagram":{"type":"object","$ref":"#/definitions/ArchitectureDiagram"},"assets":{"type":"array","items":{"$ref":"#/definitions/ProductAsset"}},"accessTypes":{"type":"array","items":{"$ref":"#/definitions/ProductAccessType"}},"trustZones":{"type":"array","items":{"$ref":"#/definitions/ProductTrustZone"}},"settings":{"type":"array","items":{"$ref":"#/definitions/ProductSetting"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}},"supportedStandards":{"type":"array","items":{"$ref":"#/definitions/SupportedStandard"}},"categoryComponents":{"type":"array","items":{"$ref":"#/definitions/CategoryComponent"}},"componentDefinitions":{"type":"array","items":{"$ref":"#/definitions/ComponentDefinition"}},"components":{"type":"array","items":{"$ref":"#/definitions/Component"}},"dataflows":{"type":"array","items":{"$ref":"#/definitions/DataFlow"}}}},"ArchitectureDiagram":{"type":"object","properties":{"draft":{"type":"boolean"},"schema":{"type":"string","description":"The representation of the architecture diagram in Draw.io XML format encoded in Base64"}}},"Question":{"type":"object","properties":{"ref":{"type":"string"}}},"ProductAsset":{"type":"object","properties":{"name":{"type":"string"},"desc":{"type":"string"},"identifier":{"type":"string"},"classification":{"type":"object","properties":{"name":{"type":"string"},"desc":{"type":"string"},"confidentiality":{"type":"integer","default":0},"integrity":{"type":"integer","default":0},"availability":{"type":"integer","default":0}}}}},"ProductAccessType":{"type":"object","properties":{"name":{"type":"string"},"value":{"type":"integer","default":0}}},"ProductTrustZone":{"type":"object","properties":{"name":{"type":"string"},"desc":{"type":"string"},"trustRating":{"type":"integer","default":1}}},"ProductSetting":{"type":"object","properties":{"name":{"type":"string"},"value":{"type":"string"}}},"Udt":{"type":"object","description":"Custom field with reference and value","properties":{"ref":{"type":"string"},"value":{"type":"string"}}},"Component":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"groupName":{"type":"string"},"tags":{"type":"string"},"position":{"type":"integer"},"questions":{"type":"array","items":{"$ref":"#/definitions/Question"}},"trustZones":{"type":"array","items":{"$ref":"#/definitions/ComponentTrustZone"}},"assets":{"type":"array","items":{"$ref":"#/definitions/ComponentAsset"}},"weaknesses":{"type":"array","items":{"$ref":"#/definitions/ComponentWeakness"}},"controls":{"type":"array","items":{"$ref":"#/definitions/ComponentControl"}},"usecases":{"type":"array","items":{"$ref":"#/definitions/ComponentUseCase"}}}},"ComponentTrustZone":{"type":"object","properties":{"name":{"type":"string"}}},"ComponentAsset":{"type":"object","properties":{"name":{"type":"string"},"accessType":{"type":"string"}}},"ComponentWeakness":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"state":{"type":"integer"},"impact":{"type":"integer"},"desc":{"type":"string"},"test":{"$ref":"#/definitions/Test"}}},"ComponentControl":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"issueId":{"type":"string"},"platform":{"type":"string"},"cost":{"type":"integer"},"risk":{"type":"integer"},"state":{"type":"string"},"owner":{"type":"string"},"desc":{"type":"string"},"source":{"type":"string"},"mitigation":{"type":"string"},"library":{"type":"string","description":"Reference of the Library"},"implementations":{"type":"array","items":{"$ref":"#/definitions/Implementation"}},"threats":{"type":"array","items":{"$ref":"#/definitions/ThreatNameAndRef"}},"weaknesses":{"type":"array","items":{"$ref":"#/definitions/WeaknessNameAndRef"}},"references":{"type":"array","items":{"$ref":"#/definitions/Reference"}},"standards":{"type":"array","items":{"$ref":"#/definitions/Standard"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}},"test":{"$ref":"#/definitions/Test"}}},"Test":{"type":"object","properties":{"expiryDate":{"type":"string"},"expiryPeriod":{"type":"integer"},"steps":{"type":"string"},"notes":{"type":"string"},"source":{"$ref":"#/definitions/TestSource"},"references":{"type":"array","items":{"$ref":"#/definitions/Reference"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"TestSource":{"type":"object","properties":{"filename":{"type":"string"},"args":{"type":"string"},"type":{"type":"string"},"result":{"type":"string"},"enabled":{"type":"boolean"},"timestamp":{"type":"string"},"output":{"type":"string"}}},"Reference":{"type":"object","properties":{"name":{"type":"string"},"url":{"type":"string"}}},"Standard":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"}}},"Implementation":{"type":"object","properties":{"platform":{"type":"string"},"desc":{"type":"string"}}},"ThreatNameAndRef":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"}}},"WeaknessNameAndRef":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"}}},"ComponentUseCase":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"threats":{"type":"array","items":{"$ref":"#/definitions/Threat"}}}},"ComponentUseCaseShort":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"desc":{"type":"string"},"threats":{"type":"array","items":{"$ref":"#/definitions/ThreatShort"}}}},"ComponentUseCaseThreatShort":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"useCase":{"$ref":"#/definitions/ComponentUseCaseShort"}}},"ThreatShort":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"state":{"type":"string"},"owner":{"type":"string"},"desc":{"type":"string"},"source":{"type":"string"},"riskRating":{"$ref":"#/definitions/RiskRating"},"inherentRisk":{"type":"integer"},"risk":{"type":"integer"},"projectedRisk":{"type":"integer"},"mitigation":{"type":"integer"},"library":{"type":"string"},"references":{"type":"array","items":{"$ref":"#/definitions/Reference"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"Threat":{"type":"object","properties":{"ref":{"type":"string"},"name":{"type":"string"},"state":{"type":"string"},"owner":{"type":"string"},"desc":{"type":"string"},"source":{"type":"string"},"riskRating":{"$ref":"#/definitions/RiskRating"},"inherentRisk":{"type":"integer"},"risk":{"type":"integer"},"projectedRisk":{"type":"integer"},"mitigation":{"type":"integer"},"library":{"type":"string"},"references":{"type":"array","items":{"$ref":"#/definitions/Reference"}},"weaknesses":{"type":"array","items":{"$ref":"#/definitions/ThreatWeakness"}},"controls":{"type":"array","items":{"$ref":"#/definitions/ThreatControl"}},"udts":{"type":"array","items":{"$ref":"#/definitions/Udt"}}}},"ThreatWeakness":{"type":"object","properties":{"ref":{"type":"string"},"controls":{"type":"array","items":{"$ref":"#/definitions/ThreatControl"}}}},"ThreatControl":{"type":"object","properties":{"ref":{"type":"string"},"mitigation":{"type":"integer"}}},"RiskRating":{"type":"object","properties":{"confidentiality":{"type":"string"},"integrity":{"type":"string"},"availability":{"type":"string"},"easeOfExploitation":{"type":"string"}}},"RiskSummary":{"type":"object","properties":{"riskCount":{"$ref":"#/definitions/RiskCount"},"inherentRisk":{"type":"integer","default":0},"projectedRisk":{"type":"integer","default":0},"residualRisk":{"type":"integer","default":0}}},"RiskCount":{"type":"object","properties":{"mitigated":{"type":"integer"},"low":{"type":"integer"},"medium":{"type":"integer"},"high":{"type":"integer"},"critical":{"type":"integer"}}},"Error":{"type":"object","properties":{"status":{"type":"string"},"errors":{"type":"array","items":{"$ref":"#/definitions/Message"}}}},"Message":{"type":"string"},"ControlCommand":{"type":"object","properties":{"ref":{"description":"Reference field value","type":"string"},"name":{"description":"Name field value","type":"string"},"desc":{"description":"Description field value","type":"string"},"mitigation":{"description":"Mitigation","type":"integer"},"test":{"$ref":"#/definitions/TestCommand"},"state":{"description":"Countermeasure state","type":"string","enum":["not-applicable","rejected","recommended","required","implemented"]},"costRating":{"description":"Countermeasure cost","type":"string","enum":["low","medium","high"]},"standards":{"description":"List of standards","type":"array","items":{"type":"object","properties":{"ref":{"type":"string","description":"Reference of the Standard"},"name":{"type":"string","description":"Name of the Supported Standard"},"supportedStandardRef":{"type":"string","description":"Reference of the Supported Standard"}}}}}},"TestCommand":{"description":"Test","type":"object","properties":{"steps":{"type":"string","description":"Test steps"},"notes":{"type":"string","description":"Test notes"}}},"Group":{"description":"Group","type":"object","properties":{"ref":{"type":"string","description":"Unique identifier of the group"},"name":{"type":"string","description":"Name of the group"},"desc":{"type":"string","description":"Description of the group"}}},"User":{"description":"User","type":"object","properties":{"username":{"type":"string","description":"Username of the User"},"firstName":{"type":"string","description":"First Name of the User"},"lastName":{"type":"string","description":"Last Name of the User"},"email":{"type":"string","description":"Email of the User"},"userGroups":{"type":"array","items":{"type":"string","description":"Roles group"}},"userRoles":{"type":"array","items":{"type":"string","description":"User roles"}}}},"SupportedStandard":{"description":"Supported Standard","type":"object","properties":{"ref":{"type":"string","description":"Unique identifier of the Supported Standard"},"name":{"type":"string","description":"Name of the Supported Standard"}}},"CategoryComponent":{"description":"Category of the Component","type":"object","properties":{"ref":{"type":"string","description":"Unique identifier of the Category of the Component"},"name":{"type":"string","description":"Name of the Category of the Component"}}},"ComponentDefinition":{"description":"Component Definition","type":"object","properties":{"ref":{"type":"string","description":"Unique identifier of the Component Definition"},"name":{"type":"string","description":"Name of the Component Definition"},"desc":{"type":"string","description":"Description of the Component Definition"},"categoryRef":{"type":"string","description":"Reference of the category of the component"},"riskPatterns":{"type":"array","items":{"type":"object","properties":{"ref":{"type":"string","description":"Reference of the Risk Pattern"}}}}}},"DataFlow":{"description":"DataFlow","type":"object","properties":{"name":{"type":"string","description":"Name of the DataFlow"},"source":{"type":"string","description":"Reference of the source Component"},"target":{"type":"string","description":"Reference of the target Component"},"assets":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string","description":"Name of the Asset"}}}}}}}}
+swagger: '2.0'
+info:
+  title: IriusRisk API
+  description: Products API
+  version: "1"
+# the domain of the service
+host: demo.iriusrisk.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /api/v1
+produces:
+  - application/json
+paths:
+  /roles:
+    post:
+      summary: Creates a new Role
+      description: |
+        Creates a new role.
+        Conditions to be able to perform the action:
+         - To have the permission **ROLES_UPDATE** granted.
+      tags:
+        - Roles
+      consumes: ["application/json"]
+      x-permissions: [ROLES_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: createRoleRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                description: Name of the new role
+                type: string
+              permissions:
+                description: Role's permissions list
+                type: array
+                items:
+                  type: string
+      responses:
+        201:
+          description: Created Role
+        401:
+          description: Authentication information is missing or invalid or not granted to perform this action.
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Bad request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Permission not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /roles/{role_name}:
+    delete:
+      summary: Deletes an existing role
+      description: |
+        Deletes an existing role.
+        Conditions to be able to perform the action:
+        - To have the permission **ROLES_UPDATE** granted.
+      tags:
+        - Roles
+      x-permissions: [ROLES_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: role_name
+          in: path
+          description: Role name to delete
+          required: true
+          type: string
+          format: string
+      responses:
+        204:
+          description: Role has been deleted
+        400:
+          description: Bad request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        401:
+          description: Authentication information is missing or invalid or not granted to perform this action.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Role not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /groups:
+    post:
+      summary: Creates a new user group
+      description: |
+        Creates a new user group.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      tags:
+        - Groups
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: createGroupRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Reference field value
+                type: string
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+      responses:
+        201:
+          description: Group details
+          schema:
+            $ref: '#/definitions/Group'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: Gets a list of all Groups
+      description: |
+        Gets a list of all user's groups.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      tags:
+        - Groups
+      x-permissions: [ALL_USERS_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+      responses:
+        200:
+          description: An array of groups
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /groups/{groupRef}:
+    put:
+      summary: Update a users group
+      description: |
+        Updates a users group.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      tags:
+        - Groups
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: groupRef
+          in: path
+          description: unique ref of the group
+          required: true
+          type: string
+          format: string
+        - name: updateGroupRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+      responses:
+        204:
+          description: Group has been updated
+          schema:
+            $ref: '#/definitions/Group'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Group not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a users group
+      description: |
+        Deletes a users group.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      tags:
+        - Groups
+      x-permissions: [ALL_USERS_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: groupRef
+          in: path
+          description: unique name of the group
+          required: true
+          type: string
+          format: string
+      responses:
+        204:
+          description: Group has been deleted
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Group not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: Gets the group details.
+      description: |
+        Returns the group details for the requested group.
+        Conditions to be able to perform the action:
+           - If the caller has the PRODUCTS_LIST_ALL permission then all groups can be queried without restriction.
+           - Without the PRODUCTS_LIST_ALL permission, the call will only return the group if the caller belongs to that group.
+      tags:
+        - Groups
+      x-permissions: [PRODUCTS_LIST_ALL]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: groupRef
+          in: path
+          description: unique name of the group
+          required: true
+          type: string
+          format: string
+      responses:
+        200:
+          description: Group details
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /groups/{group}/users:
+    get:
+      summary: List users from a group
+      description: |
+        List users who belongs to a group.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to list users of a group, **if you belong to this group**.
+      tags:
+        - Groups
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: group
+          in: path
+          description: name of the group
+          required: true
+          type: string
+          format: string
+      responses:
+        200:
+          description: An array of users who belongs to the group
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Assigns users to a group
+      description: |
+        Assigns users to a group.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to assign users to a group, **if you belong to this group**.
+      tags:
+        - Groups
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: group
+          in: path
+          description: name of the group
+          required: true
+          type: string
+          format: string
+        - name: assignUserGroupRequestBody
+          description: JSON object that contains information to assign users to group
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              usernames:
+                description: List of users to assign to group
+                type: array
+                items:
+                  type: string
+      responses:
+        201:
+          description: An array of users that have been assigned to group
+          schema:
+            type: object
+            properties:
+              group:
+                type: string
+              usernames:
+                type: array
+                items:
+                  type: string
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Unassign a list of users from a group
+      description: |
+        Unassign a list of users from a group.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign users from a group, **if you belong to this group**.
+      tags:
+        - Groups
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: group
+          in: path
+          description: name of the group
+          required: true
+          type: string
+          format: string
+        - name: unassingUsersGroupRequestBody
+          description: JSON object that contains information to unassign users from group
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              usernames:
+                description: List of usernames of users to be unassigned from a group
+                type: array
+                items:
+                  type: string
+      responses:
+        204:
+          description: All users have been unassigned
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /groups/{group}/users/{user}:
+    delete:
+      summary: Removes a user from a group
+      description: |
+        Unassign a user from a group.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign user from a group, **if you belong to this group**.
+      tags:
+        - Groups
+        - Users
+      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: group
+          in: path
+          description: name of the group
+          required: true
+          type: string
+          format: string
+        - name: user
+          in: path
+          description: user to be removed from group
+          required: true
+          type: string
+          format: string
+      responses:
+        204:
+          description: User has been removed from group
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries:
+    post:
+      summary: Creates a Library
+      description: |
+        Creates a new empty Library.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: createLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Reference field value
+                type: string
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+      responses:
+        201:
+          description: Empty Library created
+          schema:
+            $ref: '#/definitions/Library'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}:
+    get:
+      summary: Gets library details
+      description: |
+        Gets the library details.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+      responses:
+        200:
+          description: Library details
+          schema:
+            $ref: '#/definitions/Library'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a Library
+      description: |
+        Deletes a library.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+      responses:
+        204:
+          description: The library has been deleted
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns:
+    post:
+      summary: Creates new Risk Pattern
+      description: |
+        Creates new Risk Pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: createRiskPatternRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Reference field value
+                type: string
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+      responses:
+        201:
+          description: Risk Pattern details
+          schema:
+            $ref: '#/definitions/RiskPattern'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}:
+    get:
+      summary: Gets Risk Pattern details
+      description: |
+        Gets Risk Pattern details.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+      responses:
+        200:
+          description: RiskPattern details
+          schema:
+            $ref: '#/definitions/RiskPattern'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a Risk Pattern
+      description: |
+        Deletes a Risk Pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+      responses:
+        204:
+          description: The risk pattern has been deleted
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases:
+    post:
+      summary: Creates new use case in a library.
+      description: |
+        Creates new use case in a library.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Use Cases
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: createUseCaseLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Reference field value
+                type: string
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+      responses:
+        201:
+          description: UseCase details
+          schema:
+            $ref: '#/definitions/LibraryUseCase'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats:
+    post:
+      summary: Creates a new threat in a library.
+      description: |
+        Creates a new threat in a library.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Threats
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: useCaseRef
+          in: path
+          description: Reference for Use Case
+          required: true
+          type: string
+        - name: createThreatLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Reference field value
+                type: string
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+              riskRating:
+                description: Risk Rating
+                type: object
+                properties:
+                  confidentiality:
+                    description: Confidentiality
+                    type: string
+                    enum:
+                      - none
+                      - low
+                      - medium
+                      - high
+                      - very-high
+                  integrity:
+                    description: Integrity
+                    type: string
+                    enum:
+                      - none
+                      - low
+                      - medium
+                      - high
+                      - very-high
+                  availability:
+                    description: Availability
+                    type: string
+                    enum:
+                      - none
+                      - low
+                      - medium
+                      - high
+                      - very-high
+                  easeOfExploitation:
+                    description: Ease Of Exploitation
+                    type: string
+                    enum:
+                      - none
+                      - low
+                      - medium
+                      - high
+                      - very-high
+      responses:
+        201:
+          description: Threat details
+          schema:
+            $ref: '#/definitions/LibraryThreat'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/weaknesses:
+    post:
+      summary: Creates a new weakness in a risk pattern
+      description: |
+        Creates a new Weakness in a risk pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Weaknesses
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: createWeaknessLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Reference field value
+                type: string
+              name:
+                description: Name field value
+                type: string
+              desc:
+                description: Description field value
+                type: string
+              impact:
+                description: Impact
+                type: string
+                enum:
+                  - none
+                  - low
+                  - medium
+                  - high
+                  - very-high
+              test:
+                $ref: '#/definitions/TestCommand'
+      responses:
+        201:
+          description: Weakness details
+          schema:
+            $ref: '#/definitions/LibraryWeakness'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/countermeasures:
+    post:
+      summary: Creates new countermeasure in a risk pattern
+      description: |
+        Creates new countermeasure in a risk pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Countermeasures
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: createCountermeasureLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            $ref: '#/definitions/ControlCommand'
+      responses:
+        201:
+          description: Countermeasure details
+          schema:
+            $ref: '#/definitions/LibraryControl'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses:
+    put:
+      summary: Associates weakness to a threat in a risk pattern.
+      description: |
+        Associates weakness to a threat in a risk pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Use Cases
+        - Threats
+        - Weaknesses
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: useCaseRef
+          in: path
+          description: Reference for Use Case
+          required: true
+          type: string
+        - name: threatRef
+          in: path
+          description: Reference for Threat
+          required: true
+          type: string
+        - name: associateWeaknessThreatLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Existing Weakness reference
+                type: string
+      responses:
+        201:
+          description: Weakness details
+          schema:
+            $ref: '#/definitions/LibraryWeakness'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses/{weaknessRef}/countermeasures:
+    put:
+      summary: Associates a countermeasure to a weakness in a risk pattern.
+      description: |
+        Associates a countermeasure to a weakness in a risk pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Use Cases
+        - Threats
+        - Weaknesses
+        - Countermeasures
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: useCaseRef
+          in: path
+          description: Reference for Use Case
+          required: true
+          type: string
+        - name: threatRef
+          in: path
+          description: Reference for Threat
+          required: true
+          type: string
+        - name: weaknessRef
+          in: path
+          description: Reference for Weakness
+          required: true
+          type: string
+        - name: associateCountermeasureWeaknessLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Existing Countermesasure reference
+                type: string
+      responses:
+        201:
+          description: Countermeasure details
+          schema:
+            $ref: '#/definitions/LibraryControl'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/countermeasures:
+    put:
+      summary: Associates a countermeasure to a threat in a risk pattern.
+      description: |
+        Associates a countermeasure to a threat in a risk pattern.
+        Conditions to be able to perform the action:
+          - To have the permission **LIBRARY_UPDATE** granted.
+      tags:
+        - Libraries
+        - Use Cases
+        - Threats
+        - Countermeasures
+      consumes: ["application/json"]
+      x-permissions: [LIBRARY_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: libraryRef
+          in: path
+          description: Reference for library
+          required: true
+          type: string
+        - name: riskPatternRef
+          in: path
+          description: Reference for Risk Pattern
+          required: true
+          type: string
+        - name: useCaseRef
+          in: path
+          description: Reference for Use Case
+          required: true
+          type: string
+        - name: threatRef
+          in: path
+          description: Reference for Threat
+          required: true
+          type: string
+        - name: associateCountermeasureThreatLibraryRequestBody
+          in: body
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                description: Existing Countermeasure reference
+                type: string
+              mitigation:
+                description: Mitigation
+                type: integer
+      responses:
+        201:
+          description: Countermeasure details
+          schema:
+            $ref: '#/definitions/LibraryControl'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products:
+    get:
+      summary: Gets a list of all products.
+      description: |
+        Gets a list of all products visible by the user who perform the call.
+        Conditions to be able to perform the action:
+          - No permissions are required to perform this action.
+      tags:
+        - Products
+      x-permissions: []
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: max
+          in: query
+          description: maximun number of items returned
+          required: false
+          type: integer
+          format: int32
+          default: 1
+        - name: index
+          in: query
+          description: index of the first element to return
+          required: false
+          type: integer
+          format: int32
+          default: 1
+        - name: workflowState
+          in: query
+          description: filter for products by workflow state ref
+          required: false
+          type: string
+          format: string
+      responses:
+        200:
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProductShort'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Creates a new product
+      description: |
+        Createa a new product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_CREATE** granted.
+      tags:
+        - Products
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_CREATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: createProductRequestBody
+          in: body
+          description: JSON data that contains information to create new product
+          required: true
+          schema:
+            $ref: '#/definitions/CreateProduct'
+      responses:
+        201:
+          description: Gets product details
+          schema:
+            $ref: '#/definitions/ProductShort'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}:
+    put:
+      summary: Updates a product
+      description: |
+        Updates the details of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      tags:
+        - Products
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - name: updateProductRequestBody
+          in: body
+          description: JSON data that contains product details to update
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateProduct'
+      responses:
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product not found
+        200:
+          description: Product updated
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: Gets product details
+      description: |
+        Gets the details of a product.
+        Conditions to be able to perform the action:
+          - No permissions are required to perform this action.
+      tags:
+        - Products
+      x-permissions: []
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: Product details
+          schema:
+            $ref: '#/definitions/Product'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a product
+      description: |
+        Deletes a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_DELETE** granted.
+      tags:
+        - Products
+      x-permissions: [PRODUCT_DELETE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        204:
+          description: The product has been deleted
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/upload:
+    post:
+      summary: Creates a new product, library or template from a XML file upload.
+      description: |
+        Creates a new product, library or template from a XML file upload.
+        Conditions to be able to perform the action:
+        - To have the permission **PRODUCT_CREATE** granted allows to create a product.
+        - To have the permission **LIBRARY_UPDATE** granted allows to create a library.
+        - To have the permission **TEMPLATE_UPDATE** granted allows to create a template.
+      tags:
+        - Products
+        - Libraries
+        - Templates
+      consumes: ["multipart/form-data"]
+      x-permissions: [PRODUCT_CREATE, LIBRARY_UPDATE, TEMPLATE_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: formData
+          description: Product ref
+          required: true
+          type: string
+          format: string
+        - name: name
+          in: formData
+          description: Product name
+          required: true
+          type: string
+          format: string
+        - name: type
+          in: formData
+          description: Product type - STANDARD (By default), TEMPLATE or LIBRARY
+          required: false
+          type: string
+          format: string
+        - name: fileName
+          in: formData
+          description: File to upload in XML format
+          required: true
+          type: file
+      responses:
+        201:
+          description: Product details
+          schema:
+            $ref: '#/definitions/ProductShort'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/upload/{ref}:
+    post:
+      summary: Updates an existing product from a XML file upload.
+      description: |
+        Updates a product from a XML file upload.
+        Conditions to be able to perform the action:
+        - To have the permission **PRODUCT_UPDATE** granted allows to update a product.
+      tags:
+        - Products
+      consumes: ["multipart/form-data"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+          format: string
+        - name: fileName
+          in: formData
+          description: File to upload in XML format
+          required: true
+          type: file
+        - name: deleteCountermeasures
+          in: formData
+          description: This flag indicates if the rules execution will delete the threat and countermeasures which don't apply to the new product threat model. If true, the threats and countermeasures will be automatically removed from the model. If false, the threats and countermeasures won't be removed from the model.
+          required: false
+          type: string
+          format: string
+      responses:
+        200:
+          description: Product details
+          schema:
+            $ref: '#/definitions/ProductShort'
+        400:
+          description: error in the call
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/groups:
+    get:
+      summary: List all groups assigned to a product
+      description: |
+        List all groups assigned to a product.
+            Conditions to be able to perform the action:
+                - If the caller has the PRODUCTS_LIST_ALL permission then all products can be queried without restriction.
+                - Without the PRODUCTS_LIST_ALL permission, the call will only return the groups if the caller belongs to that product.
+      tags:
+        - Products
+        - Groups
+      x-permissions: [PRODUCTS_LIST_ALL]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference to product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of groups assigned to the product
+          schema:
+            type: array
+            items:
+              type: string
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Assigns groups of users to a product.
+      description: |
+        Assigns groups of users to a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      tags:
+        - Products
+        - Groups
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference for product
+          required: true
+          type: string
+        - name: assignGroupsProductRequestBody
+          description: JSON object that contains information to assign groups to product
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              groups:
+                description: List of groups to assign to product
+                type: array
+                items:
+                  type: string
+      responses:
+        201:
+          description: Product details including groups assigned
+          schema:
+            $ref: '#/definitions/ProductShortGroups'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Unassigns a list of user groups from a product.
+      description: |
+        Unassigns a list of user groups from a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      tags:
+        - Products
+        - Groups
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference for product
+          required: true
+          type: string
+        - name: unassignGroupsProductRequestBody
+          description: JSON object that contains information to unassign groups from a product
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              groups:
+                description: List of groups to unassign from product
+                type: array
+                items:
+                  type: string
+      responses:
+        200:
+          description: An object with an array of user groups that have been unassigned and an array of user groups that have not been found in the project
+          schema:
+            type: object
+            properties:
+              unassigned:
+                type: array
+                items:
+                  type: string
+              notFound:
+                type: array
+                items:
+                  type: string
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/users:
+    get:
+      summary: List all users assigned to a product
+      description: |
+        List all users assigned to a product.
+            Conditions to be able to perform the action:
+                - No permissions are required to perform this action.
+      tags:
+        - Products
+        - Users
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference to product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of users assigned to the product
+          schema:
+            type: array
+            items:
+              type: string
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Unassigns a list of users from a product.
+      description: |
+        Unassign a list of users from a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      tags:
+        - Products
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference for product
+          required: true
+          type: string
+        - name: unassignUsersProductRequestBody
+          in: body
+          description: JSON object that contains information to unassign users from product
+          required: true
+          schema:
+            type: object
+            properties:
+              users:
+                description: List of users to unassign from a product
+                type: array
+                items:
+                  type: string
+      responses:
+        204:
+          description: All users have been unassigned
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Assigns users to a product.
+      description: |
+        Assigns users to a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      tags:
+        - Products
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference for product
+          required: true
+          type: string
+        - name: assignUsersProductRequestBody
+          in: body
+          description: JSON data that contains the information to assign users to product
+          required: true
+          schema:
+            type: object
+            properties:
+              users:
+                description: List of users to assign to product
+                type: array
+                items:
+                  type: string
+      responses:
+        201:
+          description: Product details including users assigned
+          schema:
+            $ref: '#/definitions/ProductShortUsers'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/users/{user}:
+    delete:
+      summary: Unassigns a user from a product
+      description: |
+        Unassigns a user from a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      tags:
+        - Products
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [PRODUCT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference for product
+          required: true
+          type: string
+        - name: user
+          in: path
+          description: Username of the user who will be unassigned from the product
+          required: true
+          type: string
+      responses:
+        204:
+          description: User has been unassigned from the product
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/risks:
+    get:
+      summary: Gets the risks summary of a product
+      description: |
+        This endpoint returns a summary of the risks of a product.
+        Conditions to be able to perform the action:
+          - No permissions are required to perform this action.
+      tags:
+        - Products
+        - Risks
+      x-permissions: []
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: Product risks
+          schema:
+            $ref: '#/definitions/RiskSummary'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/controls:
+    get:
+      summary: Gets a list of all product countermeasures
+      description: |
+        Returns a list of all the countermeasures of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **COUNTERMEASURE_VIEW** granted, or
+          - To have the permission **COUNTERMEASURE_UPDATE** granted.
+      tags:
+        - Products
+        - Controls
+      x-permissions: [COUNTERMEASURE_VIEW, COUNTERMEASURE_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of product countermeasures
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentControl'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/controls/implemented:
+    get:
+      summary: Gets a list of all implemented countermeasures of a product.
+      description: |
+        Returns a list of all the implemented countermeasures of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **COUNTERMEASURE_VIEW** granted, or
+          - To have the permission **COUNTERMEASURE_UPDATE** granted.
+      tags:
+        - Products
+        - Controls
+      x-permissions: [COUNTERMEASURE_VIEW, COUNTERMEASURE_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of product countermeasures
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentControl'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/controls/required:
+    get:
+      summary: Gets a list of all required countermeasures of a product
+      description: |
+        Returns a list of all the required countermeasures of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **COUNTERMEASURE_VIEW** granted, or
+          - To have the permission **COUNTERMEASURE_UPDATE** granted.
+      tags:
+        - Products
+        - Controls
+      consumes: ["application/json"]
+      x-permissions: [COUNTERMEASURE_VIEW, COUNTERMEASURE_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of product countermeasures
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentControl'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/components/{componentRef}/controls/{controlRef}/status:
+    put:
+      summary: Sets the desired status to a countermeasure
+      description: |
+        Sets the desired status to a countermeasure.
+        Possible values are:
+                    - implemented
+                    - recommended
+                    - rejected
+                    - required
+        Conditions to be able to perform the action:
+          - To have the permission **COUNTERMEASURE_UPDATE** granted to set any state.
+          - To have the permission **COUNTERMEASURE_SELECT_IMPLEMENTED** granted to set implemented state.
+          - To have the permission **COUNTERMEASURE_SELECT_RECOMMENDED** granted to set recommended state.
+          - To have the permission **COUNTERMEASURE_SELECT_REJECTED** granted to set reject state.
+          - To have the permission **COUNTERMEASURE_SELECT_REQUIRED** granted to set required state.
+      tags:
+        - Products
+        - Controls
+      consumes: ["application/json"]
+      x-permissions: [COUNTERMEASURE_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - name: componentRef
+          in: path
+          description: ID for component
+          required: true
+          type: string
+        - name: controlRef
+          in: path
+          description: Control ref
+          required: true
+          type: string
+          format: string
+        - name: updateStatusCountermeasureRequestBody
+          in: body
+          description: JSON data that contains the information to update countermeasure
+          required: true
+          schema:
+            type: object
+            properties:
+              statusName:
+                type: string
+                description: New state of the countermeasure ( rejected | recommended | required | implemented )
+                enum:
+                  - rejected
+                  - recommended
+                  - required
+                  - implemented
+              rejectedReason:
+                type: string
+                description: Reason for rejecting the countermeasure
+      responses:
+        200:
+          description: An empty array
+        404:
+          description: Product, component or control not found
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/threats:
+    get:
+      summary: Gets a list of all threats of a product
+      description: |
+        Returns a list of all the threats of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **THREAT_VIEW** granted, or
+          - To have the permission **THREAT_UPDATE** granted.
+      tags:
+        - Products
+        - Threats
+      x-permissions: [THREAT_VIEW, THREAT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of product threats
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentUseCaseThreatShort'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/weaknesses:
+    get:
+      summary: Gets a list of all weaknesses of a product
+      description: |
+        Returns a list of all the weaknesses of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **THREAT_VIEW** granted, or
+          - To have the permission **THREAT_UPDATE** granted.
+      tags:
+        - Products
+        - Weaknesses
+      x-permissions: [THREAT_VIEW, THREAT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: An array of product weaknesses
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentWeakness'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/weaknesses/{test_state}:
+    get:
+      summary: Gets a list of all weaknesses of a product filtered by test state
+      description: |
+        Returns a list of all the weaknesses of a product.
+        With the optional parameter `test_state` can filter the weakness by test state.
+        Conditions to be able to perform the action:
+          - To have the permission **THREAT_VIEW** granted, or
+          - To have the permission **THREAT_UPDATE** granted.
+      tags:
+        - Products
+        - Weaknesses
+      x-permissions: [THREAT_VIEW, THREAT_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - name: test_state
+          in: path
+          description: Code for a test state
+          required: true
+          type: string
+          enum:
+            - failed
+            - error
+            - not-tested
+            - passed
+            - not-applicable
+            - partially-tested
+      responses:
+        200:
+          description: An array of product weaknesses
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ComponentWeakness'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/components/{componentRef}/tests/{cwe}:
+    put:
+      summary: Updates a single test to a component.
+      description: |
+        Updates a single test to a component.
+        Conditions to be able to perform the action:
+          - To have the permission **TEST_UPDATE** granted.
+      tags:
+        - Products
+        - Components
+        - Tests
+      consumes: ["application/json"]
+      x-permissions: [TEST_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - name: componentRef
+          in: path
+          description: ID for component
+          required: true
+          type: string
+        - name: cwe
+          in: path
+          description: countermeasure or weakness CWE
+          required: true
+          type: string
+        - name: updateStatusTestRequestBody
+          in: body
+          description: JSON data that contains the information to update test
+          required: true
+          schema:
+            type: object
+            properties:
+              state:
+                type: string
+                description: New state of the test ( not-tested | passed | failed | error )
+                enum:
+                  - not-tested
+                  - passed
+                  - failed
+                  - error
+              output:
+                type: string
+                description: new output of the test
+      responses:
+        200:
+          description: Tests updated
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: number
+                source:
+                  type: object
+                  properties:
+                    result:
+                      type: string
+                    output:
+                      type: string
+                control:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    component:
+                      type: string
+                    project:
+                      type: string
+                weakness:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    component:
+                      type: string
+                    project:
+                      type: string
+        400:
+          description: error in the call
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/tests/{testType}/upload:
+    post:
+      summary: Imports test results from different sources to a product.
+      description: |
+        Imports test results from different sources (OWASP ZAP, Cucumber, Micro Focus Fortify) uploading files. More than one file can be attached to the call.
+        Conditions to be able to perform the action:
+          - To have the permission **TEST_UPDATE** granted.
+      tags:
+        - Products
+        - Tests
+      consumes: ["multipart/form-data"]
+      x-permissions: [TEST_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - name: testType
+          in: path
+          description: Type of test to be imported (zap|cucumber|junit|hp-fortify)
+          required: true
+          type: string
+          enum:
+            - zap
+            - cucumber
+            - junit
+            - hp-fortify
+        - name: fileName
+          in: formData
+          description: File to upload
+          type: file
+      responses:
+        201:
+          description: Tests updated. Returns the number of changed tests
+          schema:
+            type: object
+            properties:
+              changedTest:
+                type: number
+        400:
+          description: Error in the call. Misspelled or undefined test Type
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+  /products/{ref}/components/{componentRef}/tests/{testType}/upload:
+    post:
+      summary: Imports test results from different sources to a component
+      description: |
+        Imports test results from different sources (OWASP ZAP, Cucumber, Micro Focus Fortify) into the specified component. More than one file can be attached to the call.
+        Conditions to be able to perform the action:
+          - To have the permission **TEST_UPDATE** granted.
+      tags:
+        - Products
+        - Components
+        - Tests
+      consumes: ["multipart/form-data"]
+      x-permissions: [TEST_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - name: componentRef
+          in: path
+          description: ID for component
+          required: true
+          type: string
+        - name: testType
+          in: path
+          description: Type of test to be imported (zap|cucumber|junit|hp-fortify)
+          required: true
+          type: string
+          enum:
+            - zap
+            - cucumber
+            - junit
+            - hp-fortify
+        - name: fileName
+          in: formData
+          description: File to upload
+          type: file
+      responses:
+        201:
+          description: Tests updated. Returns the number of changed tests
+          schema:
+            type: object
+            properties:
+              changedTest:
+                type: number
+        400:
+          description: Error in the call. Misspelled or undefined test Type
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+
+  /products/{ref}/diagram/image:
+    get:
+      summary: Gets diagram image for product.
+      description: |
+        Gets a an image in png format of the product diagram.
+        Conditions to be able to perform the action:
+          - No special permissions are required to perform this action.
+          - This API call can be used only if the user who performs the call has visibility over the product.
+      tags:
+        - Products
+      x-permissions: []
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+      responses:
+        200:
+          description: A Diagram Image
+          schema:
+            type: string
+        401:
+          description: Authentication information is missing or invalid or not granted to perform this action.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Product or Diagram not found
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /users:
+    get:
+      summary: List of all Users.
+      description: |
+        Returns a list of all the users of the system.
+        Conditions to be able to perform the action:
+          - To have the permission **ALL_USERS_UPDATE** granted.
+      tags:
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+      responses:
+        200:
+          description: An array of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        400:
+          description: Bad request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Creates a new user
+      description: |
+        Creates a new user.
+        Conditions to be able to perform the action:
+          - To have the permission **ALL_USERS_UPDATE** granted.
+      tags:
+        - Users
+      consumes: ["application/json"]
+      x-permissions: [ALL_USERS_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: createUserRequestBody
+          in: body
+          description: JSON data that contains information to creates new user
+          required: true
+          schema:
+            type: object
+            required:
+              - username
+              - auth
+              - email
+              - firstName
+              - lastName
+              - roleGroups
+            properties:
+              username:
+                description: Username of the user
+                type: string
+              auth:
+                description: Authentication type
+                type: string
+                enum:
+                  - ldap
+                  - saml
+              email:
+                description: Email of the user
+                type: string
+              firstName:
+                description: First name of the user
+                type: string
+              lastName:
+                description: Last name of the user
+                type: string
+              roleGroups:
+                description: List of roles' refs to assign to the user. Can be an empty list.
+                type: array
+                items:
+                  type: string
+      responses:
+        201:
+          description: User has been created
+        400:
+          description: Bad request
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{username}:
+    get:
+      summary: Get all the information of a user
+      description: |
+        Get all the relevant information of a user
+      tags:
+        - Users
+      consumes: ["application/json"]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: username
+          in: path
+          description: User's username
+          required: true
+          type: string
+      responses:
+        200:
+          description: The data of the user
+          schema:
+            $ref: '#/definitions/UserDetailed'
+        400:
+          description: Bad request
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Deletes a user
+      description: |
+        Deletes a user.
+        Conditions to be able to perform the action:
+          - To have the permission **ALL_USERS_UPDATE** granted, or
+          - To have the permission **MANAGE_USERS_BU** granted. Having this permission you can delete users who belongs to some of your user groups.
+      tags:
+        - Users
+      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: username
+          in: path
+          description: User's username
+          required: true
+          type: string
+      responses:
+        204:
+          description: User has been deleted
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/{username}/token:
+    post:
+      summary: Generates a user API token
+      description: |
+        Generates a new user API token. If the user already has a generated API token, generates a new one.
+        Conditions to be able to perform the action:
+          - To have the permission **ALL_USERS_UPDATE** granted, or
+          - To have the permission **MANAGE_USERS_BU** granted. Having this permission you can generate a user API token to users who belongs to some of your user groups.
+      tags:
+        - Users
+        - Token
+      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: username
+          in: path
+          description: User's username
+          required: true
+          type: string
+      responses:
+        201:
+          description: The user API token
+          schema:
+            type: string
+        401:
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /rules/product/{ref}:
+    put:
+      summary: Executes rules by a product
+      description: |
+        Execute the rules engine for a product and for all components within the product.  If the deleteCountermeasures parameter is true, then threats and countermeasure that no longer apply to the model will automatically
+        be removed.  If it is false, then those threats and countermeasures will remain in the model.
+          - To have the permission **ARCHITECTURE_UPDATE** granted.
+      tags:
+        - Rules
+        - Products
+      consumes: ["application/json"]
+      x-permissions: [ARCHITECTURE_UPDATE]
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for Product
+          required: true
+          type: string
+        - name: deleteCountermeasures
+          in: header
+          description: This flag indicates if the rules execution will delete the threat and countermeasures which don't apply to the new product threat model. If true, the threats and countermeasures will be automatically removed from the model. If false, the threats and countermeasures won't be removed from the model.
+          required: false
+          type: string
+          format: string
+      responses:
+        200:
+          description: Rules executed properly
+        403:
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  ProductShort:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      revision:
+        type: integer
+        format: int32
+        default: 1
+      type:
+        type: string
+      status:
+        type: string
+      priority:
+        type: integer
+        format: int32
+        default: 0
+      tags:
+        type: string
+      workflowState:
+        type: string
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+
+  CreateProduct:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      tags:
+        type: string
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+
+  UpdateProduct:
+    type: object
+    properties:
+      name:
+        type: string
+      desc:
+        type: string
+      tags:
+        type: string
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+
+  LibraryThreat:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      mitigation:
+        type: integer
+      risk:
+        type: integer
+      inherentRisk:
+        type: integer
+      projectedRisk:
+        type: integer
+      riskRating:
+        $ref: '#/definitions/RiskRating'
+      references:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      weaknesses:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatWeakness'
+      controls:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatControl'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+  RiskPattern:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      weaknesses:
+        type: array
+        items:
+          $ref: '#/definitions/LibraryWeakness'
+      countermeasures:
+        type: array
+        items:
+          $ref: '#/definitions/LibraryControl'
+      usecases:
+        type: array
+        items:
+          $ref: '#/definitions/LibraryUseCase'
+  LibraryUseCase:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      threats:
+        type: array
+        items:
+          $ref: '#/definitions/LibraryThreat'
+  Library:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      riskPatterns:
+        type: array
+        items:
+          $ref: '#/definitions/RiskPattern'
+  LibraryWeakness:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      state:
+        type: string
+      impact:
+        type: string
+      test:
+        $ref: '#/definitions/Test'
+      controls:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatControl'
+  LibraryControl:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      platform:
+        type: string
+      cost:
+        type: integer
+      risk:
+        type: integer
+      state:
+        type: string
+      mitigation:
+        type: integer
+      implementations:
+        type: array
+        items:
+          $ref: '#/definitions/Implementation'
+      references:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      standards:
+        type: array
+        items:
+          $ref: '#/definitions/Standard'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+      test:
+        $ref: '#/definitions/Test'
+
+  ProductShortGroups:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      revision:
+        type: integer
+        format: int32
+        default: 1
+      type:
+        type: string
+      status:
+        type: string
+      priority:
+        type: integer
+        format: int32
+        default: 0
+      tags:
+        type: string
+      workflowState:
+        type: string
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+      groups:
+        type: array
+        items:
+          type: string
+  ProductShortUsers:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      revision:
+        type: integer
+        format: int32
+        default: 1
+      type:
+        type: string
+      status:
+        type: string
+      priority:
+        type: integer
+        format: int32
+        default: 0
+      tags:
+        type: string
+      workflowState:
+        type: string
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+      users:
+        type: array
+        items:
+          type: string
+  Product:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      revision:
+        type: integer
+        default: 1
+      type:
+        type: string
+      status:
+        type: string
+      priority:
+        type: integer
+        default: 0
+      tags:
+        type: string
+      desc:
+        type: string
+      workflowState:
+        type: string
+      questions:
+        type: array
+        items:
+          $ref: '#/definitions/Question'
+      diagram:
+        $ref: '#/definitions/ArchitectureDiagram'
+      assets:
+        type: array
+        items:
+          $ref: '#/definitions/ProductAsset'
+      accessTypes:
+        type: array
+        items:
+          $ref: '#/definitions/ProductAccessType'
+      trustZones:
+        type: array
+        items:
+          $ref: '#/definitions/ProductTrustZone'
+      settings:
+        type: array
+        items:
+          $ref: '#/definitions/ProductSetting'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+      supportedStandards:
+        type: array
+        items:
+          $ref: '#/definitions/SupportedStandard'
+      categoryComponents:
+        type: array
+        items:
+          $ref: '#/definitions/CategoryComponent'
+      componentDefinitions:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentDefinition'
+      components:
+        type: array
+        items:
+          $ref: '#/definitions/Component'
+      dataflows:
+        type: array
+        items:
+          $ref: '#/definitions/DataFlow'
+  ArchitectureDiagram:
+    type: object
+    properties:
+      draft:
+        type: boolean
+      schema:
+        type: string
+        description: The representation of the architecture diagram in Draw.io XML format encoded in Base64
+  Question:
+    type: object
+    properties:
+      ref:
+        type: string
+  ProductAsset:
+    type: object
+    properties:
+      name:
+        type: string
+      desc:
+        type: string
+      identifier:
+        type: string
+      classification:
+        type: object
+        properties:
+          name:
+            type: string
+          desc:
+            type: string
+          confidentiality:
+            type: integer
+            default: 0
+          integrity:
+            type: integer
+            default: 0
+          availability:
+            type: integer
+            default: 0
+  ProductAccessType:
+    type: object
+    properties:
+      name:
+        type: string
+      value:
+        type: integer
+        default: 0
+  ProductTrustZone:
+    type: object
+    properties:
+      name:
+        type: string
+      desc:
+        type: string
+      trustRating:
+        type: integer
+        default: 1
+  ProductSetting:
+    type: object
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+  Udt:
+    type: object
+    description: Custom field with reference and value
+    properties:
+      ref:
+        type: string
+      value:
+        type: string
+  Component:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      groupName:
+        type: string
+      tags:
+        type: string
+      position:
+        type: integer
+      questions:
+        type: array
+        items:
+          $ref: '#/definitions/Question'
+      trustZones:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentTrustZone'
+      assets:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentAsset'
+      weaknesses:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentWeakness'
+      controls:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentControl'
+      usecases:
+        type: array
+        items:
+          $ref: '#/definitions/ComponentUseCase'
+  ComponentTrustZone:
+    type: object
+    properties:
+      name:
+        type: string
+  ComponentAsset:
+    type: object
+    properties:
+      name:
+        type: string
+      accessType:
+        type: string
+  ComponentWeakness:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      state:
+        type: integer
+      impact:
+        type: integer
+      desc:
+        type: string
+      test:
+        $ref: '#/definitions/Test'
+  ComponentControl:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      issueId:
+        type: string
+      platform:
+        type: string
+      cost:
+        type: integer
+      risk:
+        type: integer
+      state:
+        type: string
+      owner:
+        type: string
+      desc:
+        type: string
+      source:
+        type: string
+      mitigation:
+        type: string
+      library:
+        type: string
+        description: Reference of the Library
+      implementations:
+        type: array
+        items:
+          $ref: '#/definitions/Implementation'
+      threats:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatNameAndRef'
+      weaknesses:
+        type: array
+        items:
+          $ref: '#/definitions/WeaknessNameAndRef'
+      references:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      standards:
+        type: array
+        items:
+          $ref: '#/definitions/Standard'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+      test:
+        $ref: '#/definitions/Test'
+  Test:
+    type: object
+    properties:
+      expiryDate:
+        type: string
+      expiryPeriod:
+        type: integer
+      steps:
+        type: string
+      notes:
+        type: string
+      source:
+        $ref: '#/definitions/TestSource'
+      references:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+  TestSource:
+    type: object
+    properties:
+      filename:
+        type: string
+      args:
+        type: string
+      type:
+        type: string
+      result:
+        type: string
+      enabled:
+        type: boolean
+      timestamp:
+        type: string
+      output:
+        type: string
+  Reference:
+    type: object
+    properties:
+      name:
+        type: string
+      url:
+        type: string
+  Standard:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+  Implementation:
+    type: object
+    properties:
+      platform:
+        type: string
+      desc:
+        type: string
+  ThreatNameAndRef:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+  WeaknessNameAndRef:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+  ComponentUseCase:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      threats:
+        type: array
+        items:
+          $ref: '#/definitions/Threat'
+  ComponentUseCaseShort:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      desc:
+        type: string
+      threats:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatShort'
+  ComponentUseCaseThreatShort:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      useCase:
+        $ref: '#/definitions/ComponentUseCaseShort'
+  ThreatShort:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      state:
+        type: string
+      owner:
+        type: string
+      desc:
+        type: string
+      source:
+        type: string
+      riskRating:
+        $ref: '#/definitions/RiskRating'
+      inherentRisk:
+        type: integer
+      risk:
+        type: integer
+      projectedRisk:
+        type: integer
+      mitigation:
+        type: integer
+      library:
+        type: string
+      references:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+  Threat:
+    type: object
+    properties:
+      ref:
+        type: string
+      name:
+        type: string
+      state:
+        type: string
+      owner:
+        type: string
+      desc:
+        type: string
+      source:
+        type: string
+      riskRating:
+        $ref: '#/definitions/RiskRating'
+      inherentRisk:
+        type: integer
+      risk:
+        type: integer
+      projectedRisk:
+        type: integer
+      mitigation:
+        type: integer
+      library:
+        type: string
+      references:
+        type: array
+        items:
+          $ref: '#/definitions/Reference'
+      weaknesses:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatWeakness'
+      controls:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatControl'
+      udts:
+        type: array
+        items:
+          $ref: '#/definitions/Udt'
+  ThreatWeakness:
+    type: object
+    properties:
+      ref:
+        type: string
+      controls:
+        type: array
+        items:
+          $ref: '#/definitions/ThreatControl'
+  RiskRating:
+    type: object
+    properties:
+      confidentiality:
+        type: string
+      integrity:
+        type: string
+      availability:
+        type: string
+      easeOfExploitation:
+        type: string
+  RiskSummary:
+    type: object
+    properties:
+      riskCount:
+        $ref: '#/definitions/RiskCount'
+      inherentRisk:
+        type: integer
+        default: 0
+      projectedRisk:
+        type: integer
+        default: 0
+      residualRisk:
+        type: integer
+        default: 0
+  RiskCount:
+    type: object
+    properties:
+      'mitigated':
+        type: integer
+      'low':
+        type: integer
+      'medium':
+        type: integer
+      'high':
+        type: integer
+      'critical':
+        type: integer
+  ThreatControl:
+    type: object
+    properties:
+      ref:
+        type: string
+      mitigation:
+        type: integer
+  Error:
+    type: object
+    properties:
+      status:
+        type: string
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  Message:
+    type: string
+  ControlCommand:
+    type: object
+    properties:
+      ref:
+        description: Reference field value
+        type: string
+      name:
+        description: Name field value
+        type: string
+      desc:
+        description: Description field value
+        type: string
+      mitigation:
+        description: Mitigation
+        type: integer
+      test:
+        $ref: '#/definitions/TestCommand'
+      state:
+        description: Countermeasure state
+        type: string
+        enum:
+          - not-applicable
+          - rejected
+          - recommended
+          - required
+          - implemented
+      costRating:
+        description: Countermeasure cost
+        type: string
+        enum:
+          - low
+          - medium
+          - high
+      standards:
+        description: List of standards
+        type: array
+        items:
+          type: object
+          properties:
+            ref:
+              type: string
+              description: Reference of the Standard
+            name:
+              type: string
+              description: Name of the Supported Standard
+            supportedStandardRef:
+              type: string
+              description: Reference of the Supported Standard
+  TestCommand:
+    description: Test
+    type: object
+    properties:
+      steps:
+        type: string
+        description: Test steps
+      notes:
+        type: string
+        description: Test notes
+  Group:
+    description: Group
+    type: object
+    properties:
+      ref:
+        type: string
+        description: Unique identifier of the group
+      name:
+        type: string
+        description: Name of the group
+      desc:
+        type: string
+        description: Description of the group
+  User:
+    description: User
+    type: object
+    properties:
+      username:
+        type: string
+        description: Username of the User
+      firstName:
+        type: string
+        description: First Name of the User
+      lastName:
+        type: string
+        description: Last Name of the User
+      email:
+        type: string
+        description: Email of the User
+      userGroups:
+        type: array
+        items:
+          type: string
+          description: Roles group
+      userRoles:
+        type: array
+        items:
+          type: string
+          description: User roles
+  UserDetailed:
+    description: User
+    allOf:
+      - $ref: '#/definitions/User'
+      - type: object
+        properties:
+          apiToken:
+            type: string
+            description: Token to be able to make calls through the API
+          passwordExpired:
+            type: boolean
+            description: Indicated if the password is expired
+
+  SupportedStandard:
+    description: Supported Standard
+    type: object
+    properties:
+      ref:
+        type: string
+        description: Unique identifier of the Supported Standard
+      name:
+        type: string
+        description: Name of the Supported Standard
+
+  CategoryComponent:
+    description: Category of the Component
+    type: object
+    properties:
+      ref:
+        type: string
+        description: Unique identifier of the Category of the Component
+      name:
+        type: string
+        description: Name of the Category of the Component
+
+  ComponentDefinition:
+    description: Component Definition
+    type: object
+    properties:
+      ref:
+        type: string
+        description: Unique identifier of the Component Definition
+      name:
+        type: string
+        description: Name of the Component Definition
+      desc:
+        type: string
+        description: Description of the Component Definition
+      categoryRef:
+        type: string
+        description: Reference of the category of the component
+      riskPatterns:
+        type: array
+        items:
+          type: object
+          properties:
+            ref:
+              type: string
+              description: Reference of the Risk Pattern
+
+  DataFlow:
+    description: DataFlow
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the DataFlow
+      source:
+        type: string
+        description: Reference of the source Component
+      target:
+        type: string
+        description: Reference of the target Component
+      assets:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the Asset

@@ -42,7 +42,7 @@ public class IriusRiskClient {
         try {
 
             // Get list of products
-            List<ProductShort> rs = apiInstance.productsGet(apiToken);
+            List<ProductShort> rs = apiInstance.productsGet(apiToken, null, null, null);
             System.out.println("Product List: " + rs);
 
             // Create new product
