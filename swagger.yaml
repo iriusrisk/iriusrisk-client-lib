@@ -660,6 +660,11 @@ paths:
               desc:
                 description: Description field value
                 type: string
+              tags:
+                description: List of tags
+                type: array
+                items:
+                  type: string
       responses:
         201:
           description: Risk Pattern details
@@ -2868,6 +2873,11 @@ definitions:
         type: string
       desc:
         type: string
+      tags:
+        type: array
+        description: 'List of tags'
+        items:
+          type: string
       weaknesses:
         type: array
         items:
@@ -3094,6 +3104,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/DataFlow'
+      users:
+        type: array
+        items:
+          type: string
+      groups:
+        type: array
+        items:
+          type: string
   ArchitectureDiagram:
     type: object
     properties:
@@ -3176,8 +3194,13 @@ definitions:
         type: string
       groupName:
         type: string
+        default: null
+        description: This field always returns null. All group names have been transformed into tags.
       tags:
-        type: string
+        type: array
+        description: List of all tags
+        items:
+          type: string
       position:
         type: integer
       questions:
@@ -3714,3 +3737,4 @@ definitions:
             name:
               type: string
               description: Name of the Asset
+
