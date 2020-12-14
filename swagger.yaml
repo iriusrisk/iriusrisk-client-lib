@@ -1,29 +1,27 @@
-swagger: '2.0'
+---
+swagger: "2.0"
 info:
-  title: IriusRisk API
   description: Products API
   version: "1"
-# the domain of the service
+  title: IriusRisk API
 host: demo.iriusrisk.com
-# array of all schemes that your API supports
+basePath: /api/v1
 schemes:
   - https
-# will be prefixed to all paths
-basePath: /api/v1
 produces:
   - application/json
 paths:
   /roles:
     post:
+      tags:
+        - Roles
       summary: Creates a new Role
       description: |
         Creates a new role.
         Conditions to be able to perform the action:
          - To have the permission **ROLES_UPDATE** granted.
-      tags:
-        - Roles
-      consumes: ["application/json"]
-      x-permissions: [ROLES_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -31,54 +29,55 @@ paths:
           required: true
           type: string
           format: string
-        - name: createRoleRequestBody
-          in: body
+        - in: body
+          name: createRoleRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               name:
-                description: Name of the new role
                 type: string
+                description: Name of the new role
               permissions:
-                description: Role's permissions list
                 type: array
+                description: Role's permissions list
                 items:
                   type: string
       responses:
-        201:
+        "201":
           description: Created Role
-        401:
+        "401":
           description: Authentication information is missing or invalid or not granted to perform this action.
           schema:
             $ref: '#/definitions/Error'
-        400:
+        "400":
           description: Bad request
           schema:
             type: array
             items:
               $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Permission not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ROLES_UPDATE
   /roles/{role_name}:
     delete:
+      tags:
+        - Roles
       summary: Deletes an existing role
       description: |
         Deletes an existing role.
         Conditions to be able to perform the action:
         - To have the permission **ROLES_UPDATE** granted.
-      tags:
-        - Roles
-      x-permissions: [ROLES_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -93,39 +92,40 @@ paths:
           type: string
           format: string
       responses:
-        204:
+        "204":
           description: Role has been deleted
-        400:
+        "400":
           description: Bad request
           schema:
             type: array
             items:
               $ref: '#/definitions/Error'
-        401:
+        "401":
           description: Authentication information is missing or invalid or not granted to perform this action.
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Role not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ROLES_UPDATE
   /groups:
-    post:
-      summary: Creates a new user group
-      description: |
-        Creates a new user group.
-        Conditions to be able to perform the action:
-           - To have the permission **ALL_USERS_UPDATE** granted.
+    get:
       tags:
         - Groups
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE]
+        - Business Units
+      summary: Gets a list of all Groups
+      description: |
+        Gets a list of all user's groups.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
       parameters:
         - name: api-token
           in: header
@@ -133,28 +133,64 @@ paths:
           required: true
           type: string
           format: string
-        - name: createGroupRequestBody
-          in: body
+      responses:
+        "200":
+          description: An array of groups
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+    post:
+      tags:
+        - Groups
+        - Business Units
+      summary: Creates a new user group
+      description: |
+        Creates a new user group.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - in: body
+          name: createGroupRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
+                type: string
                 description: Reference field value
-                type: string
               name:
+                type: string
                 description: Name field value
-                type: string
               desc:
-                description: Description field value
                 type: string
+                description: Description field value
       responses:
-        201:
+        "201":
           description: Group details
           schema:
             $ref: '#/definitions/Group'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -162,134 +198,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+  /groups/{groupIdentifier}:
     get:
-      summary: Gets a list of all Groups
-      description: |
-        Gets a list of all user's groups.
-        Conditions to be able to perform the action:
-           - To have the permission **ALL_USERS_UPDATE** granted.
       tags:
         - Groups
-      x-permissions: [ALL_USERS_UPDATE]
-      parameters:
-        - name: api-token
-          in: header
-          description: Authentication token
-          required: true
-          type: string
-          format: string
-      responses:
-        200:
-          description: An array of groups
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Group'
-        403:
-          description: API is not enabled
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-  /groups/{groupRef}:
-    put:
-      summary: Update a users group
-      description: |
-        Updates a users group.
-        Conditions to be able to perform the action:
-           - To have the permission **ALL_USERS_UPDATE** granted.
-      tags:
-        - Groups
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE]
-      parameters:
-        - name: api-token
-          in: header
-          description: Authentication token
-          required: true
-          type: string
-          format: string
-        - name: groupRef
-          in: path
-          description: unique ref of the group
-          required: true
-          type: string
-          format: string
-        - name: updateGroupRequestBody
-          in: body
-          description: JSON data that contains information of the fields
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                description: Name field value
-                type: string
-              desc:
-                description: Description field value
-                type: string
-      responses:
-        204:
-          description: Group has been updated
-          schema:
-            $ref: '#/definitions/Group'
-        403:
-          description: API is not enabled
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: Group not found
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      summary: Deletes a users group
-      description: |
-        Deletes a users group.
-        Conditions to be able to perform the action:
-           - To have the permission **ALL_USERS_UPDATE** granted.
-      tags:
-        - Groups
-      x-permissions: [ALL_USERS_UPDATE]
-      parameters:
-        - name: api-token
-          in: header
-          description: Authentication token
-          required: true
-          type: string
-          format: string
-        - name: groupRef
-          in: path
-          description: unique name of the group
-          required: true
-          type: string
-          format: string
-      responses:
-        204:
-          description: Group has been deleted
-        403:
-          description: API is not enabled
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: Group not found
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    get:
+        - Business Units
       summary: Gets the group details.
       description: |
         Returns the group details for the requested group.
         Conditions to be able to perform the action:
            - If the caller has the PRODUCTS_LIST_ALL permission then all groups can be queried without restriction.
            - Without the PRODUCTS_LIST_ALL permission, the call will only return the group if the caller belongs to that group.
-      tags:
-        - Groups
-      x-permissions: [PRODUCTS_LIST_ALL]
       parameters:
         - name: api-token
           in: header
@@ -297,20 +219,20 @@ paths:
           required: true
           type: string
           format: string
-        - name: groupRef
+        - name: groupIdentifier
           in: path
           description: unique name of the group
           required: true
           type: string
           format: string
       responses:
-        200:
+        "200":
           description: Group details
           schema:
             type: array
             items:
               $ref: '#/definitions/Group'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -318,19 +240,116 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - PRODUCTS_LIST_ALL
+    put:
+      tags:
+        - Groups
+        - Business Units
+      summary: Update a users group
+      description: |
+        Updates a users group.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: groupIdentifier
+          in: path
+          description: unique ref of the group
+          required: true
+          type: string
+          format: string
+        - in: body
+          name: updateGroupRequestBody
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name field value
+              desc:
+                type: string
+                description: Description field value
+      responses:
+        "204":
+          description: Group has been updated
+          schema:
+            $ref: '#/definitions/Group'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Group not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+    delete:
+      tags:
+        - Groups
+        - Business Units
+      summary: Deletes a users group
+      description: |
+        Deletes a users group.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: groupIdentifier
+          in: path
+          description: unique name of the group
+          required: true
+          type: string
+          format: string
+      responses:
+        "204":
+          description: Group has been deleted
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Group not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
   /groups/{group}/users:
     get:
+      tags:
+        - Groups
+        - Business Units
+        - Users
       summary: List users from a group
       description: |
         List users who belongs to a group.
         Conditions to be able to perform the action:
          - To have the permission **ALL_USERS_UPDATE** granted, or
          - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to list users of a group, **if you belong to this group**.
-      tags:
-        - Groups
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -345,13 +364,13 @@ paths:
           type: string
           format: string
       responses:
-        200:
+        "200":
           description: An array of users who belongs to the group
           schema:
             type: array
             items:
               $ref: '#/definitions/User'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -359,18 +378,23 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
     put:
+      tags:
+        - Groups
+        - Business Units
+        - Users
       summary: Assigns users to a group
       description: |
         Assigns users to a group.
         Conditions to be able to perform the action:
          - To have the permission **ALL_USERS_UPDATE** granted, or
          - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to assign users to a group, **if you belong to this group**.
-      tags:
-        - Groups
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -384,20 +408,20 @@ paths:
           required: true
           type: string
           format: string
-        - name: assignUserGroupRequestBody
+        - in: body
+          name: assignUserGroupRequestBody
           description: JSON object that contains information to assign users to group
-          in: body
           required: true
           schema:
             type: object
             properties:
               usernames:
-                description: List of users to assign to group
                 type: array
+                description: List of users to assign to group
                 items:
                   type: string
       responses:
-        201:
+        "201":
           description: An array of users that have been assigned to group
           schema:
             type: object
@@ -408,7 +432,7 @@ paths:
                 type: array
                 items:
                   type: string
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -416,18 +440,23 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
     delete:
+      tags:
+        - Groups
+        - Business Units
+        - Users
       summary: Unassign a list of users from a group
       description: |
         Unassign a list of users from a group.
         Conditions to be able to perform the action:
          - To have the permission **ALL_USERS_UPDATE** granted, or
          - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign users from a group, **if you belong to this group**.
-      tags:
-        - Groups
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -441,22 +470,22 @@ paths:
           required: true
           type: string
           format: string
-        - name: unassingUsersGroupRequestBody
+        - in: body
+          name: unassingUsersGroupRequestBody
           description: JSON object that contains information to unassign users from group
-          in: body
           required: true
           schema:
             type: object
             properties:
               usernames:
-                description: List of usernames of users to be unassigned from a group
                 type: array
+                description: List of usernames of users to be unassigned from a group
                 items:
                   type: string
       responses:
-        204:
+        "204":
           description: All users have been unassigned
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -464,18 +493,22 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
   /groups/{group}/users/{user}:
     delete:
+      tags:
+        - Groups
+        - Business Units
+        - Users
       summary: Removes a user from a group
       description: |
         Unassign a user from a group.
         Conditions to be able to perform the action:
          - To have the permission **ALL_USERS_UPDATE** granted, or
          - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign user from a group, **if you belong to this group**.
-      tags:
-        - Groups
-        - Users
-      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
       parameters:
         - name: api-token
           in: header
@@ -496,9 +529,9 @@ paths:
           type: string
           format: string
       responses:
-        204:
+        "204":
           description: User has been removed from group
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -506,17 +539,439 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      deprecated: true
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
+  /businessunits:
+    get:
+      tags:
+        - Groups
+        - Business Units
+      summary: Gets a list of all business units
+      description: |
+        Gets a list of all user's business units.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+      responses:
+        "200":
+          description: An array of business units
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+    post:
+      tags:
+        - Groups
+        - Business Units
+      summary: Creates a new user business unit
+      description: |
+        Creates a new user business unit.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - in: body
+          name: createGroupRequestBody
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              ref:
+                type: string
+                description: Reference field value
+              name:
+                type: string
+                description: Name field value
+              desc:
+                type: string
+                description: Description field value
+      responses:
+        "201":
+          description: Business Unit details
+          schema:
+            $ref: '#/definitions/Group'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+  /businessunits/{businessUnitIdentifier}:
+    get:
+      tags:
+        - Groups
+        - Business Units
+      summary: Gets the business unit details.
+      description: |
+        Returns the business unit details for the requested business unit.
+        Conditions to be able to perform the action:
+           - If the caller has the PRODUCTS_LIST_ALL permission then all business units can be queried without restriction.
+           - Without the PRODUCTS_LIST_ALL permission, the call will only return the business unit if the caller belongs to that business unit.
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitIdentifier
+          in: path
+          description: unique name of the business unit
+          required: true
+          type: string
+          format: string
+      responses:
+        "200":
+          description: Business unit details
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCTS_LIST_ALL
+    put:
+      tags:
+        - Groups
+        - Business Units
+      summary: Update a users business unit
+      description: |
+        Updates a users business unit.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitIdentifier
+          in: path
+          description: unique ref of the business unit
+          required: true
+          type: string
+          format: string
+        - in: body
+          name: updateGroupRequestBody
+          description: JSON data that contains information of the fields
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name field value
+              desc:
+                type: string
+                description: Description field value
+      responses:
+        "204":
+          description: Business unit has been updated
+          schema:
+            $ref: '#/definitions/Group'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Business unit not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+    delete:
+      tags:
+        - Groups
+        - Business Units
+      summary: Deletes a users business unit
+      description: |
+        Deletes a users business unit.
+        Conditions to be able to perform the action:
+           - To have the permission **ALL_USERS_UPDATE** granted.
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitIdentifier
+          in: path
+          description: unique name of the business unit
+          required: true
+          type: string
+          format: string
+      responses:
+        "204":
+          description: Business unit has been deleted
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Business unit not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+  /businessunits/{businessUnitName}/users:
+    get:
+      tags:
+        - Groups
+        - Business Units
+        - Users
+      summary: List users from a business unit
+      description: |
+        List users who belongs to a business unit.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to list users of a business unit, **if you belong to this business unit**.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitName
+          in: path
+          description: name of the business unit
+          required: true
+          type: string
+          format: string
+      responses:
+        "200":
+          description: An array of users who belongs to the business unit
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
+    put:
+      tags:
+        - Groups
+        - Business Units
+        - Users
+      summary: Assigns users to a business unit
+      description: |
+        Assigns users to a business unit.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to assign users to a business unit, **if you belong to this business unit**.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitName
+          in: path
+          description: name of the business unit
+          required: true
+          type: string
+          format: string
+        - in: body
+          name: assignUserGroupRequestBody
+          description: JSON object that contains information to assign users to business unit
+          required: true
+          schema:
+            type: object
+            properties:
+              usernames:
+                type: array
+                description: List of users to assign to business unit
+                items:
+                  type: string
+      responses:
+        "201":
+          description: An array of users that have been assigned to business unit
+          schema:
+            type: object
+            properties:
+              group:
+                type: string
+              usernames:
+                type: array
+                items:
+                  type: string
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
+    delete:
+      tags:
+        - Groups
+        - Business Units
+        - Users
+      summary: Unassign a list of users from a business unit
+      description: |
+        Unassign a list of users from a business unit.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign users from a business unit, **if you belong to this business unit**.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitName
+          in: path
+          description: name of the business unit
+          required: true
+          type: string
+          format: string
+        - in: body
+          name: unassingUsersGroupRequestBody
+          description: JSON object that contains information to unassign users from business unit
+          required: true
+          schema:
+            type: object
+            properties:
+              usernames:
+                type: array
+                description: List of usernames of users to be unassigned from a business unit
+                items:
+                  type: string
+      responses:
+        "204":
+          description: All users have been unassigned
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
+  /businessunits/{businessUnitName}/users/{user}:
+    delete:
+      tags:
+        - Groups
+        - Business Units
+        - Users
+      summary: Removes a user from a business unit
+      description: |
+        Unassign a user from a business unit.
+        Conditions to be able to perform the action:
+         - To have the permission **ALL_USERS_UPDATE** granted, or
+         - To have the permission **MANAGE_USERS_BU** granted. With this permission you will be able to unassign user from a business unit, **if you belong to this business unit**.
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: businessUnitName
+          in: path
+          description: name of the business unit
+          required: true
+          type: string
+          format: string
+        - name: user
+          in: path
+          description: user to be removed from business unit
+          required: true
+          type: string
+          format: string
+      responses:
+        "204":
+          description: User has been removed from business unit
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
   /libraries:
     post:
+      tags:
+        - Libraries
       summary: Creates a Library
       description: |
         Creates a new empty Library.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -524,28 +979,28 @@ paths:
           required: true
           type: string
           format: string
-        - name: createLibraryRequestBody
-          in: body
+        - in: body
+          name: createLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
+                type: string
                 description: Reference field value
-                type: string
               name:
+                type: string
                 description: Name field value
-                type: string
               desc:
-                description: Description field value
                 type: string
+                description: Description field value
       responses:
-        201:
+        "201":
           description: Empty Library created
           schema:
             $ref: '#/definitions/Library'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -553,16 +1008,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}:
     get:
+      tags:
+        - Libraries
       summary: Gets library details
       description: |
         Gets the library details.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-      x-permissions: [LIBRARY_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -576,11 +1032,11 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: Library details
           schema:
             $ref: '#/definitions/Library'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -588,15 +1044,16 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
     delete:
+      tags:
+        - Libraries
       summary: Deletes a Library
       description: |
         Deletes a library.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-      x-permissions: [LIBRARY_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -610,9 +1067,9 @@ paths:
           required: true
           type: string
       responses:
-        204:
+        "204":
           description: The library has been deleted
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -620,18 +1077,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns:
     post:
+      tags:
+        - Libraries
+        - Risk Patterns
       summary: Creates new Risk Pattern
       description: |
         Creates new Risk Pattern.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -644,33 +1103,33 @@ paths:
           description: Reference for library
           required: true
           type: string
-        - name: createRiskPatternRequestBody
-          in: body
+        - in: body
+          name: createRiskPatternRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
+                type: string
                 description: Reference field value
-                type: string
               name:
+                type: string
                 description: Name field value
-                type: string
               desc:
-                description: Description field value
                 type: string
+                description: Description field value
               tags:
-                description: List of tags
                 type: array
+                description: List of tags
                 items:
                   type: string
       responses:
-        201:
+        "201":
           description: Risk Pattern details
           schema:
             $ref: '#/definitions/RiskPattern'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -678,18 +1137,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}:
     get:
+      tags:
+        - Libraries
+        - Risk Patterns
       summary: Gets Risk Pattern details
       description: |
         Gets Risk Pattern details.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -708,11 +1169,11 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: RiskPattern details
           schema:
             $ref: '#/definitions/RiskPattern'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -720,17 +1181,19 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
     delete:
+      tags:
+        - Libraries
+        - Risk Patterns
       summary: Deletes a Risk Pattern
       description: |
         Deletes a Risk Pattern.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -749,9 +1212,9 @@ paths:
           required: true
           type: string
       responses:
-        204:
+        "204":
           description: The risk pattern has been deleted
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -759,18 +1222,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases:
     post:
+      tags:
+        - Libraries
+        - Use Cases
       summary: Creates new use case in a library.
       description: |
         Creates new use case in a library.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Use Cases
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -788,28 +1253,28 @@ paths:
           description: Reference for Risk Pattern
           required: true
           type: string
-        - name: createUseCaseLibraryRequestBody
-          in: body
+        - in: body
+          name: createUseCaseLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
+                type: string
                 description: Reference field value
-                type: string
               name:
+                type: string
                 description: Name field value
-                type: string
               desc:
-                description: Description field value
                 type: string
+                description: Description field value
       responses:
-        201:
+        "201":
           description: UseCase details
           schema:
             $ref: '#/definitions/LibraryUseCase'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -817,18 +1282,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats:
     post:
+      tags:
+        - Libraries
+        - Threats
       summary: Creates a new threat in a library.
       description: |
         Creates a new threat in a library.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Threats
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -851,29 +1318,29 @@ paths:
           description: Reference for Use Case
           required: true
           type: string
-        - name: createThreatLibraryRequestBody
-          in: body
+        - in: body
+          name: createThreatLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
+                type: string
                 description: Reference field value
-                type: string
               name:
+                type: string
                 description: Name field value
-                type: string
               desc:
-                description: Description field value
                 type: string
+                description: Description field value
               riskRating:
-                description: Risk Rating
                 type: object
+                description: Risk Rating
                 properties:
                   confidentiality:
-                    description: Confidentiality
                     type: string
+                    description: Confidentiality
                     enum:
                       - none
                       - low
@@ -881,8 +1348,8 @@ paths:
                       - high
                       - very-high
                   integrity:
-                    description: Integrity
                     type: string
+                    description: Integrity
                     enum:
                       - none
                       - low
@@ -890,8 +1357,8 @@ paths:
                       - high
                       - very-high
                   availability:
-                    description: Availability
                     type: string
+                    description: Availability
                     enum:
                       - none
                       - low
@@ -899,8 +1366,8 @@ paths:
                       - high
                       - very-high
                   easeOfExploitation:
-                    description: Ease Of Exploitation
                     type: string
+                    description: Ease Of Exploitation
                     enum:
                       - none
                       - low
@@ -908,11 +1375,11 @@ paths:
                       - high
                       - very-high
       responses:
-        201:
+        "201":
           description: Threat details
           schema:
             $ref: '#/definitions/LibraryThreat'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -920,19 +1387,21 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/weaknesses:
     post:
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Weaknesses
       summary: Creates a new weakness in a risk pattern
       description: |
         Creates a new Weakness in a risk pattern.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-        - Weaknesses
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -950,25 +1419,25 @@ paths:
           description: Reference for Risk Pattern
           required: true
           type: string
-        - name: createWeaknessLibraryRequestBody
-          in: body
+        - in: body
+          name: createWeaknessLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
+                type: string
                 description: Reference field value
-                type: string
               name:
+                type: string
                 description: Name field value
-                type: string
               desc:
+                type: string
                 description: Description field value
-                type: string
               impact:
-                description: Impact
                 type: string
+                description: Impact
                 enum:
                   - none
                   - low
@@ -978,11 +1447,11 @@ paths:
               test:
                 $ref: '#/definitions/TestCommand'
       responses:
-        201:
+        "201":
           description: Weakness details
           schema:
             $ref: '#/definitions/LibraryWeakness'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -990,19 +1459,21 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/countermeasures:
     post:
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Countermeasures
       summary: Creates new countermeasure in a risk pattern
       description: |
         Creates new countermeasure in a risk pattern.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-        - Countermeasures
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1020,18 +1491,18 @@ paths:
           description: Reference for Risk Pattern
           required: true
           type: string
-        - name: createCountermeasureLibraryRequestBody
-          in: body
+        - in: body
+          name: createCountermeasureLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             $ref: '#/definitions/ControlCommand'
       responses:
-        201:
+        "201":
           description: Countermeasure details
           schema:
             $ref: '#/definitions/LibraryControl'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1039,21 +1510,23 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses:
     put:
+      tags:
+        - Libraries
+        - Risk Patterns
+        - Use Cases
+        - Threats
+        - Weaknesses
       summary: Associates weakness to a threat in a risk pattern.
       description: |
         Associates weakness to a threat in a risk pattern.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-        - Use Cases
-        - Threats
-        - Weaknesses
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1081,22 +1554,22 @@ paths:
           description: Reference for Threat
           required: true
           type: string
-        - name: associateWeaknessThreatLibraryRequestBody
-          in: body
+        - in: body
+          name: associateWeaknessThreatLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
-                description: Existing Weakness reference
                 type: string
+                description: Existing Weakness reference
       responses:
-        201:
+        "201":
           description: Weakness details
           schema:
             $ref: '#/definitions/LibraryWeakness'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1104,91 +1577,95 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses/{weaknessRef}/countermeasures:
-    put:
-      summary: Associates a countermeasure to a weakness in a risk pattern.
-      description: |
-        Associates a countermeasure to a weakness in a risk pattern.
-        Conditions to be able to perform the action:
-          - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Risk Patterns
-        - Use Cases
-        - Threats
-        - Weaknesses
-        - Countermeasures
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
-      parameters:
-        - name: api-token
-          in: header
-          description: Authentication token
-          required: true
-          type: string
-          format: string
-        - name: libraryRef
-          in: path
-          description: Reference for library
-          required: true
-          type: string
-        - name: riskPatternRef
-          in: path
-          description: Reference for Risk Pattern
-          required: true
-          type: string
-        - name: useCaseRef
-          in: path
-          description: Reference for Use Case
-          required: true
-          type: string
-        - name: threatRef
-          in: path
-          description: Reference for Threat
-          required: true
-          type: string
-        - name: weaknessRef
-          in: path
-          description: Reference for Weakness
-          required: true
-          type: string
-        - name: associateCountermeasureWeaknessLibraryRequestBody
-          in: body
-          description: JSON data that contains information of the fields
-          required: true
-          schema:
-            type: object
-            properties:
-              ref:
-                description: Existing Countermesasure reference
-                type: string
-      responses:
-        201:
-          description: Countermeasure details
-          schema:
-            $ref: '#/definitions/LibraryControl'
-        403:
-          description: API is not enabled
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
+  ? /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/weaknesses/{weaknessRef}/countermeasures
+    : put:
+        tags:
+          - Libraries
+          - Risk Patterns
+          - Use Cases
+          - Threats
+          - Weaknesses
+          - Countermeasures
+        summary: Associates a countermeasure to a weakness in a risk pattern.
+        description: |
+          Associates a countermeasure to a weakness in a risk pattern.
+          Conditions to be able to perform the action:
+            - To have the permission **LIBRARY_UPDATE** granted.
+        consumes:
+          - application/json
+        parameters:
+          - name: api-token
+            in: header
+            description: Authentication token
+            required: true
+            type: string
+            format: string
+          - name: libraryRef
+            in: path
+            description: Reference for library
+            required: true
+            type: string
+          - name: riskPatternRef
+            in: path
+            description: Reference for Risk Pattern
+            required: true
+            type: string
+          - name: useCaseRef
+            in: path
+            description: Reference for Use Case
+            required: true
+            type: string
+          - name: threatRef
+            in: path
+            description: Reference for Threat
+            required: true
+            type: string
+          - name: weaknessRef
+            in: path
+            description: Reference for Weakness
+            required: true
+            type: string
+          - in: body
+            name: associateCountermeasureWeaknessLibraryRequestBody
+            description: JSON data that contains information of the fields
+            required: true
+            schema:
+              type: object
+              properties:
+                ref:
+                  type: string
+                  description: Existing Countermesasure reference
+        responses:
+          "201":
+            description: Countermeasure details
+            schema:
+              $ref: '#/definitions/LibraryControl'
+          "403":
+            description: API is not enabled
+            schema:
+              $ref: '#/definitions/Error'
+          default:
+            description: Unexpected error
+            schema:
+              $ref: '#/definitions/Error'
+        x-permissions:
+          - LIBRARY_UPDATE
   /libraries/{libraryRef}/riskpatterns/{riskPatternRef}/usecases/{useCaseRef}/threats/{threatRef}/countermeasures:
     put:
+      tags:
+        - Libraries
+        - Use Cases
+        - Threats
+        - Countermeasures
       summary: Associates a countermeasure to a threat in a risk pattern.
       description: |
         Associates a countermeasure to a threat in a risk pattern.
         Conditions to be able to perform the action:
           - To have the permission **LIBRARY_UPDATE** granted.
-      tags:
-        - Libraries
-        - Use Cases
-        - Threats
-        - Countermeasures
-      consumes: ["application/json"]
-      x-permissions: [LIBRARY_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1216,25 +1693,25 @@ paths:
           description: Reference for Threat
           required: true
           type: string
-        - name: associateCountermeasureThreatLibraryRequestBody
-          in: body
+        - in: body
+          name: associateCountermeasureThreatLibraryRequestBody
           description: JSON data that contains information of the fields
           required: true
           schema:
             type: object
             properties:
               ref:
-                description: Existing Countermeasure reference
                 type: string
+                description: Existing Countermeasure reference
               mitigation:
-                description: Mitigation
                 type: integer
+                description: Mitigation
       responses:
-        201:
+        "201":
           description: Countermeasure details
           schema:
             $ref: '#/definitions/LibraryControl'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1242,16 +1719,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - LIBRARY_UPDATE
   /products:
     get:
+      tags:
+        - Products
       summary: Gets a list of all products.
       description: |
         Gets a list of all products visible by the user who perform the call.
         Conditions to be able to perform the action:
           - No permissions are required to perform this action.
-      tags:
-        - Products
-      x-permissions: []
       parameters:
         - name: api-token
           in: header
@@ -1264,15 +1742,15 @@ paths:
           description: maximun number of items returned
           required: false
           type: integer
-          format: int32
           default: 1
+          format: int32
         - name: index
           in: query
           description: index of the first element to return
           required: false
           type: integer
-          format: int32
           default: 1
+          format: int32
         - name: workflowState
           in: query
           description: filter for products by workflow state ref
@@ -1280,13 +1758,13 @@ paths:
           type: string
           format: string
       responses:
-        200:
+        "200":
           description: An array of products
           schema:
             type: array
             items:
               $ref: '#/definitions/ProductShort'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1294,16 +1772,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions: []
     post:
+      tags:
+        - Products
       summary: Creates a new product
       description: |
         Createa a new product.
         Conditions to be able to perform the action:
           - To have the permission **PRODUCT_CREATE** granted.
-      tags:
-        - Products
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_CREATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1311,18 +1790,18 @@ paths:
           required: true
           type: string
           format: string
-        - name: createProductRequestBody
-          in: body
+        - in: body
+          name: createProductRequestBody
           description: JSON data that contains information to create new product
           required: true
           schema:
             $ref: '#/definitions/CreateProduct'
       responses:
-        201:
+        "201":
           description: Gets product details
           schema:
             $ref: '#/definitions/ProductShort'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1330,57 +1809,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_CREATE
   /products/{ref}:
-    put:
-      summary: Updates a product
-      description: |
-        Updates the details of a product.
-        Conditions to be able to perform the action:
-          - To have the permission **PRODUCT_UPDATE** granted.
+    get:
       tags:
         - Products
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_UPDATE]
-      parameters:
-        - name: api-token
-          in: header
-          description: Authentication token
-          required: true
-          type: string
-          format: string
-        - name: ref
-          in: path
-          description: ID for product
-          required: true
-          type: string
-        - name: updateProductRequestBody
-          in: body
-          description: JSON data that contains product details to update
-          required: true
-          schema:
-            $ref: '#/definitions/UpdateProduct'
-      responses:
-        403:
-          description: API is not enabled
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: Product not found
-        200:
-          description: Product updated
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    get:
       summary: Gets product details
       description: |
         Gets the details of a product.
         Conditions to be able to perform the action:
           - No permissions are required to perform this action.
-      tags:
-        - Products
-      x-permissions: []
       parameters:
         - name: api-token
           in: header
@@ -1394,11 +1833,11 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: Product details
           schema:
             $ref: '#/definitions/Product'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1406,15 +1845,58 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions: []
+    put:
+      tags:
+        - Products
+      summary: Updates a product
+      description: |
+        Updates the details of a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: ID for product
+          required: true
+          type: string
+        - in: body
+          name: updateProductRequestBody
+          description: JSON data that contains product details to update
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateProduct'
+      responses:
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Product not found
+        "200":
+          description: Product updated
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
     delete:
+      tags:
+        - Products
       summary: Deletes a product
       description: |
         Deletes a product.
         Conditions to be able to perform the action:
           - To have the permission **PRODUCT_DELETE** granted.
-      tags:
-        - Products
-      x-permissions: [PRODUCT_DELETE]
       parameters:
         - name: api-token
           in: header
@@ -1428,9 +1910,9 @@ paths:
           required: true
           type: string
       responses:
-        204:
+        "204":
           description: The product has been deleted
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1438,8 +1920,14 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_DELETE
   /products/upload:
     post:
+      tags:
+        - Products
+        - Libraries
+        - Templates
       summary: Creates a new product, library or template from a XML file upload.
       description: |
         Creates a new product, library or template from a XML file upload.
@@ -1447,12 +1935,8 @@ paths:
         - To have the permission **PRODUCT_CREATE** granted allows to create a product.
         - To have the permission **LIBRARY_UPDATE** granted allows to create a library.
         - To have the permission **TEMPLATE_UPDATE** granted allows to create a template.
-      tags:
-        - Products
-        - Libraries
-        - Templates
-      consumes: ["multipart/form-data"]
-      x-permissions: [PRODUCT_CREATE, LIBRARY_UPDATE, TEMPLATE_UPDATE]
+      consumes:
+        - multipart/form-data
       parameters:
         - name: api-token
           in: header
@@ -1484,11 +1968,11 @@ paths:
           required: true
           type: file
       responses:
-        201:
+        "201":
           description: Product details
           schema:
             $ref: '#/definitions/ProductShort'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1496,17 +1980,21 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_CREATE
+        - LIBRARY_UPDATE
+        - TEMPLATE_UPDATE
   /products/upload/{ref}:
     post:
+      tags:
+        - Products
       summary: Updates an existing product from a XML file upload.
       description: |
         Updates a product from a XML file upload.
         Conditions to be able to perform the action:
         - To have the permission **PRODUCT_UPDATE** granted allows to update a product.
-      tags:
-        - Products
-      consumes: ["multipart/form-data"]
-      x-permissions: [PRODUCT_UPDATE]
+      consumes:
+        - multipart/form-data
       parameters:
         - name: api-token
           in: header
@@ -1532,36 +2020,37 @@ paths:
           type: string
           format: string
       responses:
-        200:
+        "200":
           description: Product details
           schema:
             $ref: '#/definitions/ProductShort'
-        400:
+        "400":
           description: error in the call
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Product not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
   /products/{ref}/groups:
     get:
+      tags:
+        - Products
+        - Groups
       summary: List all groups assigned to a product
       description: |
         List all groups assigned to a product.
             Conditions to be able to perform the action:
                 - If the caller has the PRODUCTS_LIST_ALL permission then all products can be queried without restriction.
                 - Without the PRODUCTS_LIST_ALL permission, the call will only return the groups if the caller belongs to that product.
-      tags:
-        - Products
-        - Groups
-      x-permissions: [PRODUCTS_LIST_ALL]
       parameters:
         - name: api-token
           in: header
@@ -1575,37 +2064,39 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of groups assigned to the product
           schema:
             type: array
             items:
               type: string
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Product not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCTS_LIST_ALL
     put:
+      tags:
+        - Products
+        - Groups
       summary: Assigns groups of users to a product.
       description: |
         Assigns groups of users to a product.
         Conditions to be able to perform the action:
           - To have the permission **PRODUCT_UPDATE** granted.
-      tags:
-        - Products
-        - Groups
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1618,24 +2109,24 @@ paths:
           description: Reference for product
           required: true
           type: string
-        - name: assignGroupsProductRequestBody
+        - in: body
+          name: assignGroupsProductRequestBody
           description: JSON object that contains information to assign groups to product
-          in: body
           required: true
           schema:
             type: object
             properties:
               groups:
-                description: List of groups to assign to product
                 type: array
+                description: List of groups to assign to product
                 items:
                   type: string
       responses:
-        201:
+        "201":
           description: Product details including groups assigned
           schema:
             $ref: '#/definitions/ProductShortGroups'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1643,17 +2134,19 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
     delete:
+      tags:
+        - Products
+        - Groups
       summary: Unassigns a list of user groups from a product.
       description: |
         Unassigns a list of user groups from a product.
         Conditions to be able to perform the action:
           - To have the permission **PRODUCT_UPDATE** granted.
-      tags:
-        - Products
-        - Groups
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1666,20 +2159,20 @@ paths:
           description: Reference for product
           required: true
           type: string
-        - name: unassignGroupsProductRequestBody
+        - in: body
+          name: unassignGroupsProductRequestBody
           description: JSON object that contains information to unassign groups from a product
-          in: body
           required: true
           schema:
             type: object
             properties:
               groups:
-                description: List of groups to unassign from product
                 type: array
+                description: List of groups to unassign from product
                 items:
                   type: string
       responses:
-        200:
+        "200":
           description: An object with an array of user groups that have been unassigned and an array of user groups that have not been found in the project
           schema:
             type: object
@@ -1692,30 +2185,32 @@ paths:
                 type: array
                 items:
                   type: string
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Product not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
   /products/{ref}/users:
     get:
+      tags:
+        - Products
+        - Users
       summary: List all users assigned to a product
       description: |
         List all users assigned to a product.
             Conditions to be able to perform the action:
                 - No permissions are required to perform this action.
-      tags:
-        - Products
-        - Users
       parameters:
         - name: api-token
           in: header
@@ -1729,89 +2224,37 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of users assigned to the product
           schema:
             type: array
             items:
               type: string
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
-          description: Product not found
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      summary: Unassigns a list of users from a product.
-      description: |
-        Unassign a list of users from a product.
-        Conditions to be able to perform the action:
-          - To have the permission **PRODUCT_UPDATE** granted.
-      tags:
-        - Products
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_UPDATE]
-      parameters:
-        - name: api-token
-          in: header
-          description: Authentication token
-          required: true
-          type: string
-          format: string
-        - name: ref
-          in: path
-          description: Reference for product
-          required: true
-          type: string
-        - name: unassignUsersProductRequestBody
-          in: body
-          description: JSON object that contains information to unassign users from product
-          required: true
-          schema:
-            type: object
-            properties:
-              users:
-                description: List of users to unassign from a product
-                type: array
-                items:
-                  type: string
-      responses:
-        204:
-          description: All users have been unassigned
-        401:
-          description: Authentication information is missing or invalid
-          schema:
-            $ref: '#/definitions/Error'
-        403:
-          description: API is not enabled
-          schema:
-            $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Product not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     put:
+      tags:
+        - Products
+        - Users
       summary: Assigns users to a product.
       description: |
         Assigns users to a product.
         Conditions to be able to perform the action:
           - To have the permission **PRODUCT_UPDATE** granted.
-      tags:
-        - Products
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1824,24 +2267,24 @@ paths:
           description: Reference for product
           required: true
           type: string
-        - name: assignUsersProductRequestBody
-          in: body
+        - in: body
+          name: assignUsersProductRequestBody
           description: JSON data that contains the information to assign users to product
           required: true
           schema:
             type: object
             properties:
               users:
-                description: List of users to assign to product
                 type: array
+                description: List of users to assign to product
                 items:
                   type: string
       responses:
-        201:
+        "201":
           description: Product details including users assigned
           schema:
             $ref: '#/definitions/ProductShortUsers'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1849,18 +2292,74 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
+    delete:
+      tags:
+        - Products
+        - Users
+      summary: Unassigns a list of users from a product.
+      description: |
+        Unassign a list of users from a product.
+        Conditions to be able to perform the action:
+          - To have the permission **PRODUCT_UPDATE** granted.
+      consumes:
+        - application/json
+      parameters:
+        - name: api-token
+          in: header
+          description: Authentication token
+          required: true
+          type: string
+          format: string
+        - name: ref
+          in: path
+          description: Reference for product
+          required: true
+          type: string
+        - in: body
+          name: unassignUsersProductRequestBody
+          description: JSON object that contains information to unassign users from product
+          required: true
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                description: List of users to unassign from a product
+                items:
+                  type: string
+      responses:
+        "204":
+          description: All users have been unassigned
+        "401":
+          description: Authentication information is missing or invalid
+          schema:
+            $ref: '#/definitions/Error'
+        "403":
+          description: API is not enabled
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Product not found
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
   /products/{ref}/users/{user}:
     delete:
+      tags:
+        - Products
+        - Users
       summary: Unassigns a user from a product
       description: |
         Unassigns a user from a product.
         Conditions to be able to perform the action:
           - To have the permission **PRODUCT_UPDATE** granted.
-      tags:
-        - Products
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [PRODUCT_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -1879,9 +2378,9 @@ paths:
           required: true
           type: string
       responses:
-        204:
+        "204":
           description: User has been unassigned from the product
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1889,17 +2388,18 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - PRODUCT_UPDATE
   /products/{ref}/risks:
     get:
+      tags:
+        - Products
+        - Risks
       summary: Gets the risks summary of a product
       description: |
         This endpoint returns a summary of the risks of a product.
         Conditions to be able to perform the action:
           - No permissions are required to perform this action.
-      tags:
-        - Products
-        - Risks
-      x-permissions: []
       parameters:
         - name: api-token
           in: header
@@ -1913,11 +2413,11 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: Product risks
           schema:
             $ref: '#/definitions/RiskSummary'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1925,18 +2425,18 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions: []
   /products/{ref}/controls:
     get:
+      tags:
+        - Products
+        - Controls
       summary: Gets a list of all product countermeasures
       description: |
         Returns a list of all the countermeasures of a product.
         Conditions to be able to perform the action:
           - To have the permission **COUNTERMEASURE_VIEW** granted, or
           - To have the permission **COUNTERMEASURE_UPDATE** granted.
-      tags:
-        - Products
-        - Controls
-      x-permissions: [COUNTERMEASURE_VIEW, COUNTERMEASURE_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -1950,13 +2450,13 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of product countermeasures
           schema:
             type: array
             items:
               $ref: '#/definitions/ComponentControl'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -1964,18 +2464,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - COUNTERMEASURE_VIEW
+        - COUNTERMEASURE_UPDATE
   /products/{ref}/controls/implemented:
     get:
+      tags:
+        - Products
+        - Controls
       summary: Gets a list of all implemented countermeasures of a product.
       description: |
         Returns a list of all the implemented countermeasures of a product.
         Conditions to be able to perform the action:
           - To have the permission **COUNTERMEASURE_VIEW** granted, or
           - To have the permission **COUNTERMEASURE_UPDATE** granted.
-      tags:
-        - Products
-        - Controls
-      x-permissions: [COUNTERMEASURE_VIEW, COUNTERMEASURE_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -1989,13 +2491,13 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of product countermeasures
           schema:
             type: array
             items:
               $ref: '#/definitions/ComponentControl'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2003,19 +2505,22 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - COUNTERMEASURE_VIEW
+        - COUNTERMEASURE_UPDATE
   /products/{ref}/controls/required:
     get:
+      tags:
+        - Products
+        - Controls
       summary: Gets a list of all required countermeasures of a product
       description: |
         Returns a list of all the required countermeasures of a product.
         Conditions to be able to perform the action:
           - To have the permission **COUNTERMEASURE_VIEW** granted, or
           - To have the permission **COUNTERMEASURE_UPDATE** granted.
-      tags:
-        - Products
-        - Controls
-      consumes: ["application/json"]
-      x-permissions: [COUNTERMEASURE_VIEW, COUNTERMEASURE_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2029,13 +2534,13 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of product countermeasures
           schema:
             type: array
             items:
               $ref: '#/definitions/ComponentControl'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2043,8 +2548,14 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - COUNTERMEASURE_VIEW
+        - COUNTERMEASURE_UPDATE
   /products/{ref}/components/{componentRef}/controls/{controlRef}/status:
     put:
+      tags:
+        - Products
+        - Controls
       summary: Sets the desired status to a countermeasure
       description: |
         Sets the desired status to a countermeasure.
@@ -2059,11 +2570,8 @@ paths:
           - To have the permission **COUNTERMEASURE_SELECT_RECOMMENDED** granted to set recommended state.
           - To have the permission **COUNTERMEASURE_SELECT_REJECTED** granted to set reject state.
           - To have the permission **COUNTERMEASURE_SELECT_REQUIRED** granted to set required state.
-      tags:
-        - Products
-        - Controls
-      consumes: ["application/json"]
-      x-permissions: [COUNTERMEASURE_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2087,8 +2595,8 @@ paths:
           required: true
           type: string
           format: string
-        - name: updateStatusCountermeasureRequestBody
-          in: body
+        - in: body
+          name: updateStatusCountermeasureRequestBody
           description: JSON data that contains the information to update countermeasure
           required: true
           schema:
@@ -2106,15 +2614,15 @@ paths:
                 type: string
                 description: Reason for rejecting the countermeasure
       responses:
-        200:
+        "200":
           description: An empty array
-        404:
+        "404":
           description: Product, component or control not found
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2122,18 +2630,19 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - COUNTERMEASURE_UPDATE
   /products/{ref}/threats:
     get:
+      tags:
+        - Products
+        - Threats
       summary: Gets a list of all threats of a product
       description: |
         Returns a list of all the threats of a product.
         Conditions to be able to perform the action:
           - To have the permission **THREAT_VIEW** granted, or
           - To have the permission **THREAT_UPDATE** granted.
-      tags:
-        - Products
-        - Threats
-      x-permissions: [THREAT_VIEW, THREAT_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -2147,13 +2656,13 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of product threats
           schema:
             type: array
             items:
               $ref: '#/definitions/ComponentUseCaseThreatShort'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2161,18 +2670,20 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - THREAT_VIEW
+        - THREAT_UPDATE
   /products/{ref}/weaknesses:
     get:
+      tags:
+        - Products
+        - Weaknesses
       summary: Gets a list of all weaknesses of a product
       description: |
         Returns a list of all the weaknesses of a product.
         Conditions to be able to perform the action:
           - To have the permission **THREAT_VIEW** granted, or
           - To have the permission **THREAT_UPDATE** granted.
-      tags:
-        - Products
-        - Weaknesses
-      x-permissions: [THREAT_VIEW, THREAT_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -2186,13 +2697,13 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: An array of product weaknesses
           schema:
             type: array
             items:
               $ref: '#/definitions/ComponentWeakness'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2200,8 +2711,14 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - THREAT_VIEW
+        - THREAT_UPDATE
   /products/{ref}/weaknesses/{test_state}:
     get:
+      tags:
+        - Products
+        - Weaknesses
       summary: Gets a list of all weaknesses of a product filtered by test state
       description: |
         Returns a list of all the weaknesses of a product.
@@ -2209,10 +2726,6 @@ paths:
         Conditions to be able to perform the action:
           - To have the permission **THREAT_VIEW** granted, or
           - To have the permission **THREAT_UPDATE** granted.
-      tags:
-        - Products
-        - Weaknesses
-      x-permissions: [THREAT_VIEW, THREAT_UPDATE]
       parameters:
         - name: api-token
           in: header
@@ -2238,13 +2751,13 @@ paths:
             - not-applicable
             - partially-tested
       responses:
-        200:
+        "200":
           description: An array of product weaknesses
           schema:
             type: array
             items:
               $ref: '#/definitions/ComponentWeakness'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2252,19 +2765,22 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - THREAT_VIEW
+        - THREAT_UPDATE
   /products/{ref}/components/{componentRef}/tests/{cwe}:
     put:
+      tags:
+        - Products
+        - Components
+        - Tests
       summary: Updates a single test to a component.
       description: |
         Updates a single test to a component.
         Conditions to be able to perform the action:
           - To have the permission **TEST_UPDATE** granted.
-      tags:
-        - Products
-        - Components
-        - Tests
-      consumes: ["application/json"]
-      x-permissions: [TEST_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2287,8 +2803,8 @@ paths:
           description: countermeasure or weakness CWE
           required: true
           type: string
-        - name: updateStatusTestRequestBody
-          in: body
+        - in: body
+          name: updateStatusTestRequestBody
           description: JSON data that contains the information to update test
           required: true
           schema:
@@ -2306,7 +2822,7 @@ paths:
                 type: string
                 description: new output of the test
       responses:
-        200:
+        "200":
           description: Tests updated
           schema:
             type: array
@@ -2340,24 +2856,26 @@ paths:
                       type: string
                     project:
                       type: string
-        400:
+        "400":
           description: error in the call
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - TEST_UPDATE
   /products/{ref}/tests/{testType}/upload:
     post:
+      tags:
+        - Products
+        - Tests
       summary: Imports test results from different sources to a product.
       description: |
         Imports test results from different sources (OWASP ZAP, Cucumber, Micro Focus Fortify) uploading files. More than one file can be attached to the call.
         Conditions to be able to perform the action:
           - To have the permission **TEST_UPDATE** granted.
-      tags:
-        - Products
-        - Tests
-      consumes: ["multipart/form-data"]
-      x-permissions: [TEST_UPDATE]
+      consumes:
+        - multipart/form-data
       parameters:
         - name: api-token
           in: header
@@ -2383,34 +2901,37 @@ paths:
         - name: fileName
           in: formData
           description: File to upload
+          required: false
           type: file
       responses:
-        201:
+        "201":
           description: Tests updated. Returns the number of changed tests
           schema:
             type: object
             properties:
               changedTest:
                 type: number
-        400:
+        "400":
           description: Error in the call. Misspelled or undefined test Type
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - TEST_UPDATE
   /products/{ref}/components/{componentRef}/tests/{testType}/upload:
     post:
+      tags:
+        - Products
+        - Components
+        - Tests
       summary: Imports test results from different sources to a component
       description: |
         Imports test results from different sources (OWASP ZAP, Cucumber, Micro Focus Fortify) into the specified component. More than one file can be attached to the call.
         Conditions to be able to perform the action:
           - To have the permission **TEST_UPDATE** granted.
-      tags:
-        - Products
-        - Components
-        - Tests
-      consumes: ["multipart/form-data"]
-      x-permissions: [TEST_UPDATE]
+      consumes:
+        - multipart/form-data
       parameters:
         - name: api-token
           in: header
@@ -2441,33 +2962,34 @@ paths:
         - name: fileName
           in: formData
           description: File to upload
+          required: false
           type: file
       responses:
-        201:
+        "201":
           description: Tests updated. Returns the number of changed tests
           schema:
             type: object
             properties:
               changedTest:
                 type: number
-        400:
+        "400":
           description: Error in the call. Misspelled or undefined test Type
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-
+      x-permissions:
+        - TEST_UPDATE
   /products/{ref}/diagram/image:
     get:
+      tags:
+        - Products
       summary: Gets diagram image for product.
       description: |
         Gets a an image in png format of the product diagram.
         Conditions to be able to perform the action:
           - No special permissions are required to perform this action.
           - This API call can be used only if the user who performs the call has visibility over the product.
-      tags:
-        - Products
-      x-permissions: []
       parameters:
         - name: api-token
           in: header
@@ -2481,19 +3003,19 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: A Diagram Image
           schema:
             type: string
-        401:
+        "401":
           description: Authentication information is missing or invalid or not granted to perform this action.
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: Product or Diagram not found
           schema:
             $ref: '#/definitions/Error'
@@ -2501,18 +3023,18 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-
+      x-permissions: []
   /users:
     get:
+      tags:
+        - Users
       summary: List of all Users.
       description: |
         Returns a list of all the users of the system.
         Conditions to be able to perform the action:
           - To have the permission **ALL_USERS_UPDATE** granted.
-      tags:
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2521,23 +3043,23 @@ paths:
           type: string
           format: string
       responses:
-        200:
+        "200":
           description: An array of users
           schema:
             type: array
             items:
               $ref: '#/definitions/User'
-        400:
+        "400":
           description: Bad request
           schema:
             type: array
             items:
               $ref: '#/definitions/Error'
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2545,16 +3067,18 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
     post:
+      tags:
+        - Users
       summary: Creates a new user
       description: |
         Creates a new user.
         Conditions to be able to perform the action:
           - To have the permission **ALL_USERS_UPDATE** granted.
-      tags:
-        - Users
-      consumes: ["application/json"]
-      x-permissions: [ALL_USERS_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2562,49 +3086,49 @@ paths:
           required: true
           type: string
           format: string
-        - name: createUserRequestBody
-          in: body
+        - in: body
+          name: createUserRequestBody
           description: JSON data that contains information to creates new user
           required: true
           schema:
             type: object
             required:
-              - username
               - auth
               - email
               - firstName
               - lastName
               - roleGroups
+              - username
             properties:
               username:
+                type: string
                 description: Username of the user
-                type: string
               auth:
-                description: Authentication type
                 type: string
+                description: Authentication type
                 enum:
                   - ldap
                   - saml
               email:
+                type: string
                 description: Email of the user
-                type: string
               firstName:
+                type: string
                 description: First name of the user
-                type: string
               lastName:
-                description: Last name of the user
                 type: string
+                description: Last name of the user
               roleGroups:
-                description: List of roles' refs to assign to the user. Can be an empty list.
                 type: array
+                description: List of roles' refs to assign to the user. Can be an empty list.
                 items:
                   type: string
       responses:
-        201:
+        "201":
           description: User has been created
-        400:
+        "400":
           description: Bad request
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2612,14 +3136,17 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
   /users/{username}:
     get:
+      tags:
+        - Users
       summary: Get all the information of a user
       description: |
         Get all the relevant information of a user
-      tags:
-        - Users
-      consumes: ["application/json"]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2633,17 +3160,17 @@ paths:
           required: true
           type: string
       responses:
-        200:
+        "200":
           description: The data of the user
           schema:
             $ref: '#/definitions/UserDetailed'
-        400:
+        "400":
           description: Bad request
           schema:
             type: array
             items:
               $ref: '#/definitions/Error'
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
@@ -2652,15 +3179,14 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
+      tags:
+        - Users
       summary: Deletes a user
       description: |
         Deletes a user.
         Conditions to be able to perform the action:
           - To have the permission **ALL_USERS_UPDATE** granted, or
           - To have the permission **MANAGE_USERS_BU** granted. Having this permission you can delete users who belongs to some of your user groups.
-      tags:
-        - Users
-      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
       parameters:
         - name: api-token
           in: header
@@ -2674,30 +3200,32 @@ paths:
           required: true
           type: string
       responses:
-        204:
+        "204":
           description: User has been deleted
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: User not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
   /users/{username}/token:
     post:
+      tags:
+        - Users
+        - Token
       summary: Generates a user API token
       description: |
         Generates a new user API token. If the user already has a generated API token, generates a new one.
         Conditions to be able to perform the action:
           - To have the permission **ALL_USERS_UPDATE** granted, or
           - To have the permission **MANAGE_USERS_BU** granted. Having this permission you can generate a user API token to users who belongs to some of your user groups.
-      tags:
-        - Users
-        - Token
-      x-permissions: [ALL_USERS_UPDATE, MANAGE_USERS_BU]
       parameters:
         - name: api-token
           in: header
@@ -2711,36 +3239,39 @@ paths:
           required: true
           type: string
       responses:
-        201:
+        "201":
           description: The user API token
           schema:
             type: string
-        401:
+        "401":
           description: Authentication information is missing or invalid
           schema:
             $ref: '#/definitions/Error'
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
-        404:
+        "404":
           description: User not found
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ALL_USERS_UPDATE
+        - MANAGE_USERS_BU
   /rules/product/{ref}:
     put:
+      tags:
+        - Rules
+        - Products
       summary: Executes rules by a product
       description: |
         Execute the rules engine for a product and for all components within the product.  If the deleteCountermeasures parameter is true, then threats and countermeasure that no longer apply to the model will automatically
         be removed.  If it is false, then those threats and countermeasures will remain in the model.
           - To have the permission **ARCHITECTURE_UPDATE** granted.
-      tags:
-        - Rules
-        - Products
-      consumes: ["application/json"]
-      x-permissions: [ARCHITECTURE_UPDATE]
+      consumes:
+        - application/json
       parameters:
         - name: api-token
           in: header
@@ -2760,9 +3291,9 @@ paths:
           type: string
           format: string
       responses:
-        200:
+        "200":
           description: Rules executed properly
-        403:
+        "403":
           description: API is not enabled
           schema:
             $ref: '#/definitions/Error'
@@ -2770,6 +3301,8 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+      x-permissions:
+        - ARCHITECTURE_UPDATE
 definitions:
   ProductShort:
     type: object
@@ -2798,7 +3331,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Udt'
-
   CreateProduct:
     type: object
     properties:
@@ -2814,7 +3346,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Udt'
-
   UpdateProduct:
     type: object
     properties:
@@ -2828,7 +3359,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Udt'
-
   LibraryThreat:
     type: object
     properties:
@@ -2875,7 +3405,7 @@ definitions:
         type: string
       tags:
         type: array
-        description: 'List of tags'
+        description: List of tags
         items:
           type: string
       weaknesses:
@@ -2972,7 +3502,6 @@ definitions:
           $ref: '#/definitions/Udt'
       test:
         $ref: '#/definitions/Test'
-
   ProductShortGroups:
     type: object
     properties:
@@ -3044,14 +3573,12 @@ definitions:
         type: string
       revision:
         type: integer
-        default: 1
       type:
         type: string
       status:
         type: string
       priority:
         type: integer
-        default: 0
       tags:
         type: string
       desc:
@@ -3143,13 +3670,10 @@ definitions:
             type: string
           confidentiality:
             type: integer
-            default: 0
           integrity:
             type: integer
-            default: 0
           availability:
             type: integer
-            default: 0
   ProductAccessType:
     type: object
     properties:
@@ -3157,7 +3681,6 @@ definitions:
         type: string
       value:
         type: integer
-        default: 0
   ProductTrustZone:
     type: object
     properties:
@@ -3167,7 +3690,6 @@ definitions:
         type: string
       trustRating:
         type: integer
-        default: 1
   ProductSetting:
     type: object
     properties:
@@ -3177,12 +3699,12 @@ definitions:
         type: string
   Udt:
     type: object
-    description: Custom field with reference and value
     properties:
       ref:
         type: string
       value:
         type: string
+    description: Custom field with reference and value
   Component:
     type: object
     properties:
@@ -3194,7 +3716,6 @@ definitions:
         type: string
       groupName:
         type: string
-        default: null
         description: This field always returns null. All group names have been transformed into tags.
       tags:
         type: array
@@ -3521,25 +4042,22 @@ definitions:
         $ref: '#/definitions/RiskCount'
       inherentRisk:
         type: integer
-        default: 0
       projectedRisk:
         type: integer
-        default: 0
       residualRisk:
         type: integer
-        default: 0
   RiskCount:
     type: object
     properties:
-      'mitigated':
+      mitigated:
         type: integer
-      'low':
+      low:
         type: integer
-      'medium':
+      medium:
         type: integer
-      'high':
+      high:
         type: integer
-      'critical':
+      critical:
         type: integer
   ThreatControl:
     type: object
@@ -3563,22 +4081,22 @@ definitions:
     type: object
     properties:
       ref:
+        type: string
         description: Reference field value
-        type: string
       name:
+        type: string
         description: Name field value
-        type: string
       desc:
-        description: Description field value
         type: string
+        description: Description field value
       mitigation:
-        description: Mitigation
         type: integer
+        description: Mitigation
       test:
         $ref: '#/definitions/TestCommand'
       state:
-        description: Countermeasure state
         type: string
+        description: Countermeasure state
         enum:
           - not-applicable
           - rejected
@@ -3586,15 +4104,15 @@ definitions:
           - required
           - implemented
       costRating:
-        description: Countermeasure cost
         type: string
+        description: Countermeasure cost
         enum:
           - low
           - medium
           - high
       standards:
-        description: List of standards
         type: array
+        description: List of standards
         items:
           type: object
           properties:
@@ -3608,7 +4126,6 @@ definitions:
               type: string
               description: Reference of the Supported Standard
   TestCommand:
-    description: Test
     type: object
     properties:
       steps:
@@ -3617,8 +4134,8 @@ definitions:
       notes:
         type: string
         description: Test notes
+    description: Test
   Group:
-    description: Group
     type: object
     properties:
       ref:
@@ -3630,8 +4147,8 @@ definitions:
       desc:
         type: string
         description: Description of the group
+    description: Group
   User:
-    description: User
     type: object
     properties:
       username:
@@ -3656,21 +4173,40 @@ definitions:
         items:
           type: string
           description: User roles
-  UserDetailed:
     description: User
-    allOf:
-      - $ref: '#/definitions/User'
-      - type: object
-        properties:
-          apiToken:
-            type: string
-            description: Token to be able to make calls through the API
-          passwordExpired:
-            type: boolean
-            description: Indicated if the password is expired
-
+  UserDetailed:
+    type: object
+    properties:
+      username:
+        type: string
+        description: Username of the User
+      firstName:
+        type: string
+        description: First Name of the User
+      lastName:
+        type: string
+        description: Last Name of the User
+      email:
+        type: string
+        description: Email of the User
+      userGroups:
+        type: array
+        items:
+          type: string
+          description: Roles group
+      userRoles:
+        type: array
+        items:
+          type: string
+          description: User roles
+      apiToken:
+        type: string
+        description: Token to be able to make calls through the API
+      passwordExpired:
+        type: boolean
+        description: Indicated if the password is expired
+    description: User
   SupportedStandard:
-    description: Supported Standard
     type: object
     properties:
       ref:
@@ -3679,9 +4215,8 @@ definitions:
       name:
         type: string
         description: Name of the Supported Standard
-
+    description: Supported Standard
   CategoryComponent:
-    description: Category of the Component
     type: object
     properties:
       ref:
@@ -3690,9 +4225,8 @@ definitions:
       name:
         type: string
         description: Name of the Category of the Component
-
+    description: Category of the Component
   ComponentDefinition:
-    description: Component Definition
     type: object
     properties:
       ref:
@@ -3715,9 +4249,8 @@ definitions:
             ref:
               type: string
               description: Reference of the Risk Pattern
-
+    description: Component Definition
   DataFlow:
-    description: DataFlow
     type: object
     properties:
       name:
@@ -3737,4 +4270,4 @@ definitions:
             name:
               type: string
               description: Name of the Asset
-
+    description: DataFlow
