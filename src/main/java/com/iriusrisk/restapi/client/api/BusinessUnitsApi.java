@@ -3,6 +3,8 @@
 
 package com.iriusrisk.restapi.client.api;
 
+import com.squareup.okhttp.Call;
+import com.google.gson.reflect.TypeToken;
 import com.iriusrisk.restapi.client.ApiCallback;
 import com.iriusrisk.restapi.client.ApiClient;
 import com.iriusrisk.restapi.client.ApiException;
@@ -11,17 +13,10 @@ import com.iriusrisk.restapi.client.Configuration;
 import com.iriusrisk.restapi.client.Pair;
 import com.iriusrisk.restapi.client.ProgressRequestBody;
 import com.iriusrisk.restapi.client.ProgressResponseBody;
-
-import com.google.gson.reflect.TypeToken;
-
-import java.io.IOException;
-
-
 import com.iriusrisk.restapi.client.model.AssignUserGroupRequestBody;
 import com.iriusrisk.restapi.client.model.AssignUserGroupRequestBody1;
 import com.iriusrisk.restapi.client.model.CreateGroupRequestBody;
 import com.iriusrisk.restapi.client.model.CreateGroupRequestBody1;
-import com.iriusrisk.restapi.client.model.Error;
 import com.iriusrisk.restapi.client.model.Group;
 import com.iriusrisk.restapi.client.model.InlineResponse201;
 import com.iriusrisk.restapi.client.model.UnassingUsersGroupRequestBody;
@@ -29,7 +24,10 @@ import com.iriusrisk.restapi.client.model.UnassingUsersGroupRequestBody1;
 import com.iriusrisk.restapi.client.model.UpdateGroupRequestBody;
 import com.iriusrisk.restapi.client.model.UpdateGroupRequestBody1;
 import com.iriusrisk.restapi.client.model.User;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.Response;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +62,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierDeleteCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitIdentifierDeleteCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -93,10 +91,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -109,7 +107,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierDeleteValidateBeforeCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitIdentifierDeleteValidateBeforeCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -122,7 +120,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierDeleteCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitIdentifierDeleteCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
         return call;
 
     }
@@ -147,7 +145,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<Void> businessunitsBusinessUnitIdentifierDeleteWithHttpInfo(String apiToken, String businessUnitIdentifier) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierDeleteValidateBeforeCall(apiToken, businessUnitIdentifier, null, null);
+        Call call = businessunitsBusinessUnitIdentifierDeleteValidateBeforeCall(apiToken, businessUnitIdentifier, null, null);
         return apiClient.execute(call);
     }
 
@@ -160,7 +158,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierDeleteAsync(String apiToken, String businessUnitIdentifier, final ApiCallback<Void> callback) throws ApiException {
+    public Call businessunitsBusinessUnitIdentifierDeleteAsync(String apiToken, String businessUnitIdentifier, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -181,7 +179,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierDeleteValidateBeforeCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitIdentifierDeleteValidateBeforeCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
@@ -194,7 +192,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierGetCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitIdentifierGetCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -223,10 +221,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -239,7 +237,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierGetValidateBeforeCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitIdentifierGetValidateBeforeCall(String apiToken, String businessUnitIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -252,7 +250,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierGetCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitIdentifierGetCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
         return call;
 
     }
@@ -279,7 +277,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<Group>> businessunitsBusinessUnitIdentifierGetWithHttpInfo(String apiToken, String businessUnitIdentifier) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierGetValidateBeforeCall(apiToken, businessUnitIdentifier, null, null);
+        Call call = businessunitsBusinessUnitIdentifierGetValidateBeforeCall(apiToken, businessUnitIdentifier, null, null);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -293,7 +291,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierGetAsync(String apiToken, String businessUnitIdentifier, final ApiCallback<List<Group>> callback) throws ApiException {
+    public Call businessunitsBusinessUnitIdentifierGetAsync(String apiToken, String businessUnitIdentifier, final ApiCallback<List<Group>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -314,7 +312,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierGetValidateBeforeCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitIdentifierGetValidateBeforeCall(apiToken, businessUnitIdentifier, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -329,7 +327,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierPutCall(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitIdentifierPutCall(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = updateGroupRequestBody;
 
         // create path and map variables
@@ -358,10 +356,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -374,7 +372,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierPutValidateBeforeCall(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitIdentifierPutValidateBeforeCall(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -392,7 +390,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierPutCall(apiToken, businessUnitIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitIdentifierPutCall(apiToken, businessUnitIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -421,7 +419,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<Group> businessunitsBusinessUnitIdentifierPutWithHttpInfo(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierPutValidateBeforeCall(apiToken, businessUnitIdentifier, updateGroupRequestBody, null, null);
+        Call call = businessunitsBusinessUnitIdentifierPutValidateBeforeCall(apiToken, businessUnitIdentifier, updateGroupRequestBody, null, null);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -436,7 +434,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitIdentifierPutAsync(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
+    public Call businessunitsBusinessUnitIdentifierPutAsync(String apiToken, String businessUnitIdentifier, UpdateGroupRequestBody1 updateGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -457,7 +455,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitIdentifierPutValidateBeforeCall(apiToken, businessUnitIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitIdentifierPutValidateBeforeCall(apiToken, businessUnitIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -472,7 +470,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersDeleteCall(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersDeleteCall(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = unassingUsersGroupRequestBody;
 
         // create path and map variables
@@ -501,10 +499,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -517,7 +515,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersDeleteValidateBeforeCall(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitNameUsersDeleteValidateBeforeCall(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -535,7 +533,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersDeleteCall(apiToken, businessUnitName, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersDeleteCall(apiToken, businessUnitName, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -562,7 +560,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<Void> businessunitsBusinessUnitNameUsersDeleteWithHttpInfo(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersDeleteValidateBeforeCall(apiToken, businessUnitName, unassingUsersGroupRequestBody, null, null);
+        Call call = businessunitsBusinessUnitNameUsersDeleteValidateBeforeCall(apiToken, businessUnitName, unassingUsersGroupRequestBody, null, null);
         return apiClient.execute(call);
     }
 
@@ -576,7 +574,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersDeleteAsync(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody, final ApiCallback<Void> callback) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersDeleteAsync(String apiToken, String businessUnitName, UnassingUsersGroupRequestBody1 unassingUsersGroupRequestBody, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -597,7 +595,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersDeleteValidateBeforeCall(apiToken, businessUnitName, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersDeleteValidateBeforeCall(apiToken, businessUnitName, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
@@ -610,7 +608,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersGetCall(String apiToken, String businessUnitName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersGetCall(String apiToken, String businessUnitName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -639,10 +637,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -655,7 +653,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersGetValidateBeforeCall(String apiToken, String businessUnitName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitNameUsersGetValidateBeforeCall(String apiToken, String businessUnitName, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -668,7 +666,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersGetCall(apiToken, businessUnitName, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersGetCall(apiToken, businessUnitName, progressListener, progressRequestListener);
         return call;
 
     }
@@ -695,7 +693,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<User>> businessunitsBusinessUnitNameUsersGetWithHttpInfo(String apiToken, String businessUnitName) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersGetValidateBeforeCall(apiToken, businessUnitName, null, null);
+        Call call = businessunitsBusinessUnitNameUsersGetValidateBeforeCall(apiToken, businessUnitName, null, null);
         Type localVarReturnType = new TypeToken<List<User>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -709,7 +707,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersGetAsync(String apiToken, String businessUnitName, final ApiCallback<List<User>> callback) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersGetAsync(String apiToken, String businessUnitName, final ApiCallback<List<User>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -730,7 +728,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersGetValidateBeforeCall(apiToken, businessUnitName, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersGetValidateBeforeCall(apiToken, businessUnitName, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<User>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -745,7 +743,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersPutCall(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersPutCall(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = assignUserGroupRequestBody;
 
         // create path and map variables
@@ -774,10 +772,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -790,7 +788,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersPutValidateBeforeCall(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitNameUsersPutValidateBeforeCall(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -808,7 +806,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersPutCall(apiToken, businessUnitName, assignUserGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersPutCall(apiToken, businessUnitName, assignUserGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -837,7 +835,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<InlineResponse201> businessunitsBusinessUnitNameUsersPutWithHttpInfo(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersPutValidateBeforeCall(apiToken, businessUnitName, assignUserGroupRequestBody, null, null);
+        Call call = businessunitsBusinessUnitNameUsersPutValidateBeforeCall(apiToken, businessUnitName, assignUserGroupRequestBody, null, null);
         Type localVarReturnType = new TypeToken<InlineResponse201>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -852,7 +850,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersPutAsync(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody, final ApiCallback<InlineResponse201> callback) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersPutAsync(String apiToken, String businessUnitName, AssignUserGroupRequestBody1 assignUserGroupRequestBody, final ApiCallback<InlineResponse201> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -873,7 +871,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersPutValidateBeforeCall(apiToken, businessUnitName, assignUserGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersPutValidateBeforeCall(apiToken, businessUnitName, assignUserGroupRequestBody, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<InlineResponse201>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -888,7 +886,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersUserDeleteCall(String apiToken, String businessUnitName, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersUserDeleteCall(String apiToken, String businessUnitName, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -918,10 +916,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -934,7 +932,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersUserDeleteValidateBeforeCall(String apiToken, String businessUnitName, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsBusinessUnitNameUsersUserDeleteValidateBeforeCall(String apiToken, String businessUnitName, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -952,7 +950,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersUserDeleteCall(apiToken, businessUnitName, user, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersUserDeleteCall(apiToken, businessUnitName, user, progressListener, progressRequestListener);
         return call;
 
     }
@@ -979,7 +977,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<Void> businessunitsBusinessUnitNameUsersUserDeleteWithHttpInfo(String apiToken, String businessUnitName, String user) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersUserDeleteValidateBeforeCall(apiToken, businessUnitName, user, null, null);
+        Call call = businessunitsBusinessUnitNameUsersUserDeleteValidateBeforeCall(apiToken, businessUnitName, user, null, null);
         return apiClient.execute(call);
     }
 
@@ -993,7 +991,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsBusinessUnitNameUsersUserDeleteAsync(String apiToken, String businessUnitName, String user, final ApiCallback<Void> callback) throws ApiException {
+    public Call businessunitsBusinessUnitNameUsersUserDeleteAsync(String apiToken, String businessUnitName, String user, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1014,7 +1012,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsBusinessUnitNameUsersUserDeleteValidateBeforeCall(apiToken, businessUnitName, user, progressListener, progressRequestListener);
+        Call call = businessunitsBusinessUnitNameUsersUserDeleteValidateBeforeCall(apiToken, businessUnitName, user, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
@@ -1026,7 +1024,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsGetCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsGetCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1054,10 +1052,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1070,7 +1068,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsGetValidateBeforeCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsGetValidateBeforeCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1078,7 +1076,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsGetCall(apiToken, progressListener, progressRequestListener);
+        Call call = businessunitsGetCall(apiToken, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1103,7 +1101,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<List<Group>> businessunitsGetWithHttpInfo(String apiToken) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsGetValidateBeforeCall(apiToken, null, null);
+        Call call = businessunitsGetValidateBeforeCall(apiToken, null, null);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1116,7 +1114,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsGetAsync(String apiToken, final ApiCallback<List<Group>> callback) throws ApiException {
+    public Call businessunitsGetAsync(String apiToken, final ApiCallback<List<Group>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1137,7 +1135,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsGetValidateBeforeCall(apiToken, progressListener, progressRequestListener);
+        Call call = businessunitsGetValidateBeforeCall(apiToken, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -1151,7 +1149,7 @@ public class BusinessUnitsApi {
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
      */
-    public com.squareup.okhttp.Call businessunitsPostCall(String apiToken, CreateGroupRequestBody1 createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call businessunitsPostCall(String apiToken, CreateGroupRequestBody1 createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = createGroupRequestBody;
 
         // create path and map variables
@@ -1179,10 +1177,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1195,7 +1193,7 @@ public class BusinessUnitsApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call businessunitsPostValidateBeforeCall(String apiToken, CreateGroupRequestBody1 createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call businessunitsPostValidateBeforeCall(String apiToken, CreateGroupRequestBody1 createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1208,7 +1206,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = businessunitsPostCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsPostCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1235,7 +1233,7 @@ public class BusinessUnitsApi {
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      */
     public ApiResponse<Group> businessunitsPostWithHttpInfo(String apiToken, CreateGroupRequestBody1 createGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = businessunitsPostValidateBeforeCall(apiToken, createGroupRequestBody, null, null);
+        Call call = businessunitsPostValidateBeforeCall(apiToken, createGroupRequestBody, null, null);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1249,7 +1247,7 @@ public class BusinessUnitsApi {
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
      */
-    public com.squareup.okhttp.Call businessunitsPostAsync(String apiToken, CreateGroupRequestBody1 createGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
+    public Call businessunitsPostAsync(String apiToken, CreateGroupRequestBody1 createGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1270,7 +1268,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = businessunitsPostValidateBeforeCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
+        Call call = businessunitsPostValidateBeforeCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -1285,7 +1283,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGetCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGetCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1313,10 +1311,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1330,7 +1328,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGetValidateBeforeCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGetValidateBeforeCall(String apiToken, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1338,7 +1336,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGetCall(apiToken, progressListener, progressRequestListener);
+        Call call = groupsGetCall(apiToken, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1367,7 +1365,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<List<Group>> groupsGetWithHttpInfo(String apiToken) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGetValidateBeforeCall(apiToken, null, null);
+        Call call = groupsGetValidateBeforeCall(apiToken, null, null);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1382,7 +1380,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGetAsync(String apiToken, final ApiCallback<List<Group>> callback) throws ApiException {
+    public Call groupsGetAsync(String apiToken, final ApiCallback<List<Group>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1403,7 +1401,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGetValidateBeforeCall(apiToken, progressListener, progressRequestListener);
+        Call call = groupsGetValidateBeforeCall(apiToken, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -1419,7 +1417,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupIdentifierDeleteCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupIdentifierDeleteCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1448,10 +1446,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1465,7 +1463,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupIdentifierDeleteValidateBeforeCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupIdentifierDeleteValidateBeforeCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1478,7 +1476,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupIdentifierDeleteCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
+        Call call = groupsGroupIdentifierDeleteCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1507,7 +1505,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<Void> groupsGroupIdentifierDeleteWithHttpInfo(String apiToken, String groupIdentifier) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupIdentifierDeleteValidateBeforeCall(apiToken, groupIdentifier, null, null);
+        Call call = groupsGroupIdentifierDeleteValidateBeforeCall(apiToken, groupIdentifier, null, null);
         return apiClient.execute(call);
     }
 
@@ -1522,7 +1520,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupIdentifierDeleteAsync(String apiToken, String groupIdentifier, final ApiCallback<Void> callback) throws ApiException {
+    public Call groupsGroupIdentifierDeleteAsync(String apiToken, String groupIdentifier, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1543,7 +1541,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupIdentifierDeleteValidateBeforeCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
+        Call call = groupsGroupIdentifierDeleteValidateBeforeCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
@@ -1558,7 +1556,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupIdentifierGetCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupIdentifierGetCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -1587,10 +1585,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1604,7 +1602,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupIdentifierGetValidateBeforeCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupIdentifierGetValidateBeforeCall(String apiToken, String groupIdentifier, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1617,7 +1615,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupIdentifierGetCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
+        Call call = groupsGroupIdentifierGetCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1648,7 +1646,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<List<Group>> groupsGroupIdentifierGetWithHttpInfo(String apiToken, String groupIdentifier) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupIdentifierGetValidateBeforeCall(apiToken, groupIdentifier, null, null);
+        Call call = groupsGroupIdentifierGetValidateBeforeCall(apiToken, groupIdentifier, null, null);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1664,7 +1662,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupIdentifierGetAsync(String apiToken, String groupIdentifier, final ApiCallback<List<Group>> callback) throws ApiException {
+    public Call groupsGroupIdentifierGetAsync(String apiToken, String groupIdentifier, final ApiCallback<List<Group>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1685,7 +1683,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupIdentifierGetValidateBeforeCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
+        Call call = groupsGroupIdentifierGetValidateBeforeCall(apiToken, groupIdentifier, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<Group>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -1702,7 +1700,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupIdentifierPutCall(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupIdentifierPutCall(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = updateGroupRequestBody;
 
         // create path and map variables
@@ -1731,10 +1729,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1748,7 +1746,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupIdentifierPutValidateBeforeCall(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupIdentifierPutValidateBeforeCall(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1766,7 +1764,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupIdentifierPutCall(apiToken, groupIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsGroupIdentifierPutCall(apiToken, groupIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1799,7 +1797,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<Group> groupsGroupIdentifierPutWithHttpInfo(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupIdentifierPutValidateBeforeCall(apiToken, groupIdentifier, updateGroupRequestBody, null, null);
+        Call call = groupsGroupIdentifierPutValidateBeforeCall(apiToken, groupIdentifier, updateGroupRequestBody, null, null);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -1816,7 +1814,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupIdentifierPutAsync(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
+    public Call groupsGroupIdentifierPutAsync(String apiToken, String groupIdentifier, UpdateGroupRequestBody updateGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1837,7 +1835,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupIdentifierPutValidateBeforeCall(apiToken, groupIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsGroupIdentifierPutValidateBeforeCall(apiToken, groupIdentifier, updateGroupRequestBody, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -1854,7 +1852,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersDeleteCall(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupUsersDeleteCall(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = unassingUsersGroupRequestBody;
 
         // create path and map variables
@@ -1883,10 +1881,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -1900,7 +1898,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupUsersDeleteValidateBeforeCall(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupUsersDeleteValidateBeforeCall(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -1918,7 +1916,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupUsersDeleteCall(apiToken, group, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersDeleteCall(apiToken, group, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -1949,7 +1947,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<Void> groupsGroupUsersDeleteWithHttpInfo(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupUsersDeleteValidateBeforeCall(apiToken, group, unassingUsersGroupRequestBody, null, null);
+        Call call = groupsGroupUsersDeleteValidateBeforeCall(apiToken, group, unassingUsersGroupRequestBody, null, null);
         return apiClient.execute(call);
     }
 
@@ -1965,7 +1963,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersDeleteAsync(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody, final ApiCallback<Void> callback) throws ApiException {
+    public Call groupsGroupUsersDeleteAsync(String apiToken, String group, UnassingUsersGroupRequestBody unassingUsersGroupRequestBody, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -1986,7 +1984,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupUsersDeleteValidateBeforeCall(apiToken, group, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersDeleteValidateBeforeCall(apiToken, group, unassingUsersGroupRequestBody, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
@@ -2001,7 +1999,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersGetCall(String apiToken, String group, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupUsersGetCall(String apiToken, String group, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -2030,10 +2028,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -2047,7 +2045,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupUsersGetValidateBeforeCall(String apiToken, String group, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupUsersGetValidateBeforeCall(String apiToken, String group, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -2060,7 +2058,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupUsersGetCall(apiToken, group, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersGetCall(apiToken, group, progressListener, progressRequestListener);
         return call;
 
     }
@@ -2091,7 +2089,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<List<User>> groupsGroupUsersGetWithHttpInfo(String apiToken, String group) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupUsersGetValidateBeforeCall(apiToken, group, null, null);
+        Call call = groupsGroupUsersGetValidateBeforeCall(apiToken, group, null, null);
         Type localVarReturnType = new TypeToken<List<User>>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -2107,7 +2105,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersGetAsync(String apiToken, String group, final ApiCallback<List<User>> callback) throws ApiException {
+    public Call groupsGroupUsersGetAsync(String apiToken, String group, final ApiCallback<List<User>> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -2128,7 +2126,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupUsersGetValidateBeforeCall(apiToken, group, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersGetValidateBeforeCall(apiToken, group, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<List<User>>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -2145,7 +2143,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersPutCall(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupUsersPutCall(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = assignUserGroupRequestBody;
 
         // create path and map variables
@@ -2174,10 +2172,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -2191,7 +2189,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupUsersPutValidateBeforeCall(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupUsersPutValidateBeforeCall(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -2209,7 +2207,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupUsersPutCall(apiToken, group, assignUserGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersPutCall(apiToken, group, assignUserGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -2242,7 +2240,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<InlineResponse201> groupsGroupUsersPutWithHttpInfo(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupUsersPutValidateBeforeCall(apiToken, group, assignUserGroupRequestBody, null, null);
+        Call call = groupsGroupUsersPutValidateBeforeCall(apiToken, group, assignUserGroupRequestBody, null, null);
         Type localVarReturnType = new TypeToken<InlineResponse201>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -2259,7 +2257,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersPutAsync(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody, final ApiCallback<InlineResponse201> callback) throws ApiException {
+    public Call groupsGroupUsersPutAsync(String apiToken, String group, AssignUserGroupRequestBody assignUserGroupRequestBody, final ApiCallback<InlineResponse201> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -2280,7 +2278,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupUsersPutValidateBeforeCall(apiToken, group, assignUserGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersPutValidateBeforeCall(apiToken, group, assignUserGroupRequestBody, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<InlineResponse201>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
@@ -2297,7 +2295,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersUserDeleteCall(String apiToken, String group, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsGroupUsersUserDeleteCall(String apiToken, String group, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = null;
 
         // create path and map variables
@@ -2327,10 +2325,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -2344,7 +2342,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsGroupUsersUserDeleteValidateBeforeCall(String apiToken, String group, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsGroupUsersUserDeleteValidateBeforeCall(String apiToken, String group, String user, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -2362,7 +2360,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsGroupUsersUserDeleteCall(apiToken, group, user, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersUserDeleteCall(apiToken, group, user, progressListener, progressRequestListener);
         return call;
 
     }
@@ -2393,7 +2391,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<Void> groupsGroupUsersUserDeleteWithHttpInfo(String apiToken, String group, String user) throws ApiException {
-        com.squareup.okhttp.Call call = groupsGroupUsersUserDeleteValidateBeforeCall(apiToken, group, user, null, null);
+        Call call = groupsGroupUsersUserDeleteValidateBeforeCall(apiToken, group, user, null, null);
         return apiClient.execute(call);
     }
 
@@ -2409,7 +2407,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsGroupUsersUserDeleteAsync(String apiToken, String group, String user, final ApiCallback<Void> callback) throws ApiException {
+    public Call groupsGroupUsersUserDeleteAsync(String apiToken, String group, String user, final ApiCallback<Void> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -2430,7 +2428,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsGroupUsersUserDeleteValidateBeforeCall(apiToken, group, user, progressListener, progressRequestListener);
+        Call call = groupsGroupUsersUserDeleteValidateBeforeCall(apiToken, group, user, progressListener, progressRequestListener);
         apiClient.executeAsync(call, callback);
         return call;
     }
@@ -2445,7 +2443,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsPostCall(String apiToken, CreateGroupRequestBody createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    public Call groupsPostCall(String apiToken, CreateGroupRequestBody createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         Object localVarPostBody = createGroupRequestBody;
 
         // create path and map variables
@@ -2473,10 +2471,10 @@ public class BusinessUnitsApi {
         localVarHeaderParams.put("Content-Type", localVarContentType);
 
         if(progressListener != null) {
-            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+            apiClient.getHttpClient().networkInterceptors().add(new Interceptor() {
                 @Override
-                public com.squareup.okhttp.Response intercept(com.squareup.okhttp.Interceptor.Chain chain) throws IOException {
-                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                public Response intercept(Interceptor.Chain chain) throws IOException {
+                    Response originalResponse = chain.proceed(chain.request());
                     return originalResponse.newBuilder()
                     .body(new ProgressResponseBody(originalResponse.body(), progressListener))
                     .build();
@@ -2490,7 +2488,7 @@ public class BusinessUnitsApi {
 
     @Deprecated
     @SuppressWarnings("rawtypes")
-    private com.squareup.okhttp.Call groupsPostValidateBeforeCall(String apiToken, CreateGroupRequestBody createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+    private Call groupsPostValidateBeforeCall(String apiToken, CreateGroupRequestBody createGroupRequestBody, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
         
         // verify the required parameter 'apiToken' is set
         if (apiToken == null) {
@@ -2503,7 +2501,7 @@ public class BusinessUnitsApi {
         }
         
 
-        com.squareup.okhttp.Call call = groupsPostCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsPostCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
         return call;
 
     }
@@ -2534,7 +2532,7 @@ public class BusinessUnitsApi {
      */
     @Deprecated
     public ApiResponse<Group> groupsPostWithHttpInfo(String apiToken, CreateGroupRequestBody createGroupRequestBody) throws ApiException {
-        com.squareup.okhttp.Call call = groupsPostValidateBeforeCall(apiToken, createGroupRequestBody, null, null);
+        Call call = groupsPostValidateBeforeCall(apiToken, createGroupRequestBody, null, null);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         return apiClient.execute(call, localVarReturnType);
     }
@@ -2550,7 +2548,7 @@ public class BusinessUnitsApi {
      * @deprecated
      */
     @Deprecated
-    public com.squareup.okhttp.Call groupsPostAsync(String apiToken, CreateGroupRequestBody createGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
+    public Call groupsPostAsync(String apiToken, CreateGroupRequestBody createGroupRequestBody, final ApiCallback<Group> callback) throws ApiException {
 
         ProgressResponseBody.ProgressListener progressListener = null;
         ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
@@ -2571,7 +2569,7 @@ public class BusinessUnitsApi {
             };
         }
 
-        com.squareup.okhttp.Call call = groupsPostValidateBeforeCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
+        Call call = groupsPostValidateBeforeCall(apiToken, createGroupRequestBody, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<Group>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
