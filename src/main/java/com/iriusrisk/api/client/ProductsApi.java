@@ -794,7 +794,7 @@ public class ProductsApi {
      * @return String
      * @throws RestClientException if an error occurs while attempting to invoke the API
      */
-    public String productsRefDiagramImageGet(String apiToken, String ref) throws RestClientException {
+    public byte[] productsRefDiagramImageGet(String apiToken, String ref) throws RestClientException {
         return productsRefDiagramImageGetWithHttpInfo(apiToken, ref).getBody();
     }
 
@@ -811,7 +811,7 @@ public class ProductsApi {
      * @return ResponseEntity&lt;String&gt;
      * @throws RestClientException if an error occurs while attempting to invoke the API
      */
-    public ResponseEntity<String> productsRefDiagramImageGetWithHttpInfo(String apiToken, String ref) throws RestClientException {
+    public ResponseEntity<byte[]> productsRefDiagramImageGetWithHttpInfo(String apiToken, String ref) throws RestClientException {
         Object postBody = null;
         
         // verify the required parameter 'apiToken' is set
@@ -845,7 +845,7 @@ public class ProductsApi {
 
         String[] authNames = new String[] {  };
 
-        ParameterizedTypeReference<String> returnType = new ParameterizedTypeReference<String>() {};
+        ParameterizedTypeReference<byte[]> returnType = new ParameterizedTypeReference<byte[]>() {};
         return apiClient.invokeAPI(path, HttpMethod.GET, queryParams, postBody, headerParams, formParams, accept, contentType, authNames, returnType);
     }
     /**
