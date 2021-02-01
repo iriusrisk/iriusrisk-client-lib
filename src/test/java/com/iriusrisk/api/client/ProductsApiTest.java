@@ -246,7 +246,7 @@ public class ProductsApiTest {
     public void productsRefDiagramImageGetTest() {
         String apiToken = null;
         String ref = null;
-        String response = api.productsRefDiagramImageGet(apiToken, ref);
+        byte[] response = api.productsRefDiagramImageGet(apiToken, ref);
 
         // TODO: test validations
     }
