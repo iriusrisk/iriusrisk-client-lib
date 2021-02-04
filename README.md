@@ -97,6 +97,12 @@ public class BusinessUnitsApiExample {
 
 [Models](https://github.com/iriusrisk/iriusrisk-client-lib/wiki/Models)
 
+## Embedded tests
+The project contains unit tests defined to validate the API contract. These tests must be launched with the following VM parameters:
+   ```
+     -Dapi.key=apikey -Dapi.base.path=http(s)://baseurl:port/api/v1 
+   ```
+**IMPORTANT: Never launch these tests against a production instance. It creates and removes entities on the fly, may destroy data, and will generate random entities**
 
 ## Authorization
 

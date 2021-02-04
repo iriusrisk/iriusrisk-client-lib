@@ -24,11 +24,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.threeten.bp.*;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,7 +50,7 @@ import com.iriusrisk.api.client.invoker.auth.HttpBasicAuth;
 import com.iriusrisk.api.client.invoker.auth.ApiKeyAuth;
 import com.iriusrisk.api.client.invoker.auth.OAuth;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2020-12-15T08:48:15.539+01:00")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2021-02-04T10:27:59.154+01:00")
 @Component("com.iriusrisk.api.client.invoker.ApiClient")
 public class ApiClient {
     public enum CollectionFormat {
@@ -75,11 +70,14 @@ public class ApiClient {
     
     private HttpHeaders defaultHeaders = new HttpHeaders();
     
-    private String basePath = "https://demo.iriusrisk.com/api/v1";
+    private String basePath = "https://localhost/api/v1";
 
     private RestTemplate restTemplate;
 
     private Map<String, Authentication> authentications;
+
+    private HttpStatus statusCode;
+    private MultiValueMap<String, String> responseHeaders;
     
     private DateFormat dateFormat;
 
@@ -107,6 +105,7 @@ public class ApiClient {
 
         // Setup authentications (key: authentication name, value: authentication).
         authentications = new HashMap<String, Authentication>();
+        authentications.put("api_token", new ApiKeyAuth("header", "api-token"));
         // Prevent the authentications from being modified.
         authentications = Collections.unmodifiableMap(authentications);
     }
@@ -127,6 +126,22 @@ public class ApiClient {
     public ApiClient setBasePath(String basePath) {
         this.basePath = basePath;
         return this;
+    }
+
+    /**
+     * Gets the status code of the previous request
+     * @return HttpStatus the status code
+     */
+    public HttpStatus getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * Gets the response headers of the previous request
+     * @return MultiValueMap a map of response headers
+     */
+    public MultiValueMap<String, String> getResponseHeaders() {
+        return responseHeaders;
     }
 
     /**
@@ -235,9 +250,6 @@ public class ApiClient {
      * @return ApiClient this client
      */
     public ApiClient addDefaultHeader(String name, String value) {
-        if (defaultHeaders.containsKey(name)) {
-            defaultHeaders.remove(name);
-        }
         defaultHeaders.add(name, value);
         return this;
     }
@@ -289,12 +301,6 @@ public class ApiClient {
      */
     public ApiClient setDateFormat(DateFormat dateFormat) {
         this.dateFormat = dateFormat;
-        for(HttpMessageConverter converter:restTemplate.getMessageConverters()){
-            if(converter instanceof AbstractJackson2HttpMessageConverter){
-                ObjectMapper mapper = ((AbstractJackson2HttpMessageConverter)converter).getObjectMapper();
-                mapper.setDateFormat(dateFormat);
-            }
-        }
         return this;
     }
     
@@ -392,11 +398,6 @@ public class ApiClient {
     * @return boolean true if the MediaType represents JSON, false otherwise
     */
     public boolean isJsonMime(String mediaType) {
-        // "* / *" is default to JSON
-        if ("*/*".equals(mediaType)) {
-            return true;
-        }
-
         try {
             return isJsonMime(MediaType.parseMediaType(mediaType));
         } catch (InvalidMediaTypeException e) {
@@ -485,9 +486,9 @@ public class ApiClient {
      * @param contentType The request's Content-Type header
      * @param authNames The authentications to apply
      * @param returnType The return type into which to deserialize the response
-     * @return ResponseEntity&lt;T&gt; The response of the chosen type
+     * @return The response body in chosen type
      */
-    public <T> ResponseEntity<T> invokeAPI(String path, HttpMethod method, MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, MultiValueMap<String, Object> formParams, List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
+    public <T> T invokeAPI(String path, HttpMethod method, MultiValueMap<String, String> queryParams, Object body, HttpHeaders headerParams, MultiValueMap<String, Object> formParams, List<MediaType> accept, MediaType contentType, String[] authNames, ParameterizedTypeReference<T> returnType) throws RestClientException {
         updateParamsForAuth(authNames, queryParams, headerParams);
         
         final UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(basePath).path(path);
@@ -509,12 +510,20 @@ public class ApiClient {
         RequestEntity<Object> requestEntity = requestBuilder.body(selectBody(body, formParams, contentType));
 
         ResponseEntity<T> responseEntity = restTemplate.exchange(requestEntity, returnType);
+        
+        statusCode = responseEntity.getStatusCode();
+        responseHeaders = responseEntity.getHeaders();
 
-        if (responseEntity.getStatusCode().is2xxSuccessful()) {
-            return responseEntity;
+        if (responseEntity.getStatusCode() == HttpStatus.NO_CONTENT) {
+            return null;
+        } else if (responseEntity.getStatusCode().is2xxSuccessful()) {
+            if (returnType == null) {
+                return null;
+            }
+            return responseEntity.getBody();
         } else {
             // The error handler built into the RestTemplate should handle 400 and 500 series errors.
-            throw new RestClientException("API returned " + responseEntity.getStatusCode() + " and it wasn't handled by the RestTemplate error handler");
+            throw new RestClientException("API returned " + statusCode + " and it wasn't handled by the RestTemplate error handler");
         }
     }
     
@@ -540,16 +549,6 @@ public class ApiClient {
      */
     protected RestTemplate buildRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        for(HttpMessageConverter converter:restTemplate.getMessageConverters()){
-            if(converter instanceof AbstractJackson2HttpMessageConverter){
-                ObjectMapper mapper = ((AbstractJackson2HttpMessageConverter)converter).getObjectMapper();
-                ThreeTenModule module = new ThreeTenModule();
-                module.addDeserializer(Instant.class, CustomInstantDeserializer.INSTANT);
-                module.addDeserializer(OffsetDateTime.class, CustomInstantDeserializer.OFFSET_DATE_TIME);
-                module.addDeserializer(ZonedDateTime.class, CustomInstantDeserializer.ZONED_DATE_TIME);
-                mapper.registerModule(module);
-            }
-        }
         // This allows us to read the response more than once - Necessary for debugging.
         restTemplate.setRequestFactory(new BufferingClientHttpRequestFactory(restTemplate.getRequestFactory()));
         return restTemplate;

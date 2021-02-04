@@ -19,52 +19,41 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * ThreatNameAndRef
+ * Body3
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2021-02-04T10:27:59.154+01:00")
-public class ThreatNameAndRef {
-  @JsonProperty("ref")
-  private String ref = null;
+public class Body3 {
+  @JsonProperty("usernames")
+  private List<String> usernames = null;
 
-  @JsonProperty("name")
-  private String name = null;
+  public Body3 usernames(List<String> usernames) {
+    this.usernames = usernames;
+    return this;
+  }
 
-  public ThreatNameAndRef ref(String ref) {
-    this.ref = ref;
+  public Body3 addUsernamesItem(String usernamesItem) {
+    if (this.usernames == null) {
+      this.usernames = new ArrayList<String>();
+    }
+    this.usernames.add(usernamesItem);
     return this;
   }
 
    /**
-   * Get ref
-   * @return ref
+   * List of users to assign to group
+   * @return usernames
   **/
-  @ApiModelProperty(value = "")
-  public String getRef() {
-    return ref;
+  @ApiModelProperty(value = "List of users to assign to group")
+  public List<String> getUsernames() {
+    return usernames;
   }
 
-  public void setRef(String ref) {
-    this.ref = ref;
-  }
-
-  public ThreatNameAndRef name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
+  public void setUsernames(List<String> usernames) {
+    this.usernames = usernames;
   }
 
 
@@ -76,24 +65,22 @@ public class ThreatNameAndRef {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ThreatNameAndRef threatNameAndRef = (ThreatNameAndRef) o;
-    return Objects.equals(this.ref, threatNameAndRef.ref) &&
-        Objects.equals(this.name, threatNameAndRef.name);
+    Body3 body3 = (Body3) o;
+    return Objects.equals(this.usernames, body3.usernames);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(ref, name);
+    return Objects.hash(usernames);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ThreatNameAndRef {\n");
+    sb.append("class Body3 {\n");
     
-    sb.append("    ref: ").append(toIndentedString(ref)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    usernames: ").append(toIndentedString(usernames)).append("\n");
     sb.append("}");
     return sb.toString();
   }
